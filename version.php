@@ -18,15 +18,15 @@
  * Version information for local_mentorship.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_mentorship';
-$plugin->version   = 2026102101; // VM: 1.0.1 fixes double-escaped course and activity names.
+$plugin->version   = 2026102101; //1.0.1 fixes double-escaped course and activity names.
 $plugin->requires  = 2022112800; // Moodle 4.1 LTS.
 $plugin->supported = [401, 503];  // Moodle 4.1 to 5.3.
-$plugin->maturity  = MATURITY_BETA;
+$plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.0.1';

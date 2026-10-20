@@ -29,7 +29,7 @@ use local_mentorship\pairing;
  * Privacy provider for local_mentorship. Pairings are stored at system context.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements

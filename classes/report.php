@@ -26,7 +26,7 @@ use stdClass;
  * //VM: match the existing grade report exactly.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report {

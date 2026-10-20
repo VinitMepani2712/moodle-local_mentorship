@@ -15,20 +15,20 @@
  * along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /* ============================================================
    Mentee Training Report — local_mentorship (DCF-OTPD)
 
-   VM: Ported from local_staticpage/styles/gradereport.css. Shared design file
-   VM: for view.php, index.php and manage.php, loaded via $PAGE->requires->css().
-   VM: Fonts are bundled in styles/fonts (SIL OFL 1.1, see thirdpartylibs.xml),
-   VM: so the plugin makes no requests to external servers.
-   VM: Changes from the original: <progress> replaces the inline-width bar,
-   VM: [hidden] panels, header meta/actions, back link, table scroll box,
-   VM: and the unused .btn-outline-overdue block removed.
+  Ported from local_staticpage/styles/gradereport.css. Shared design file
+  for view.php, index.php and manage.php, loaded via $PAGE->requires->css().
+  Fonts are bundled in styles/fonts (SIL OFL 1.1, see thirdpartylibs.xml),
+  so the plugin makes no requests to external servers.
+  Changes from the original: <progress> replaces the inline-width bar,
+  [hidden] panels, header meta/actions, back link, table scroll box,
+  and the unused .btn-outline-overdue block removed.
    ============================================================ */
 
 /* ============================================================
@@ -164,12 +164,12 @@
   box-sizing: border-box;
 }
 
-/* VM: Panels and the date row are toggled with the hidden attribute. */
+/*Panels and the date row are toggled with the hidden attribute. */
 #egr-wrapper [hidden] {
   display: none !important;
 }
 
-/* VM: Back link above the report. */
+/*Back link above the report. */
 #egr-wrapper .egr-back {
   display: inline-flex;
   align-items: center;
@@ -291,7 +291,7 @@
   letter-spacing: -0.01em;
 }
 
-/* VM: Pairing details under the name, and the action buttons. */
+/*Pairing details under the name, and the action buttons. */
 #egr-wrapper .egr-user-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1053,7 +1053,7 @@
   min-width: 130px;
 }
 
-/* VM: Native <progress> replaces the div bar with an inline width. */
+/*Native <progress> replaces the div bar with an inline width. */
 #egr-wrapper .egr-progress {
   flex: 1;
   min-width: 80px;
@@ -1149,7 +1149,9 @@
 }
 
 @keyframes egr-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
 
@@ -1215,7 +1217,7 @@
 /* ============================================================
    14 - ACTIVITIES TABLE
    ============================================================ */
-/* VM: Wide activity tables scroll inside their panel instead of the page. */
+/*Wide activity tables scroll inside their panel instead of the page. */
 #egr-wrapper .egr-table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -1544,10 +1546,10 @@
   flex: none;
 }
 
-/* VM: Avatars are sized by their container so a photo (img) and Moodle's
+/*Avatars are sized by their container so a photo (img) and Moodle's
    initials (span.userinitials) look the same. */
-#egr-wrapper .egr-mp-banner > .userpicture,
-#egr-wrapper .egr-mp-banner > .userinitials {
+#egr-wrapper .egr-mp-banner>.userpicture,
+#egr-wrapper .egr-mp-banner>.userinitials {
   width: 60px;
   height: 60px;
   margin: 0;
@@ -1557,7 +1559,7 @@
   object-fit: cover;
 }
 
-#egr-wrapper .egr-mp-banner > .userinitials {
+#egr-wrapper .egr-mp-banner>.userinitials {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1567,18 +1569,18 @@
   font-weight: 700;
 }
 
-#egr-wrapper .egr-mp-mentor-ring > .userpicture,
-#egr-wrapper .egr-mp-mentor-ring > .userinitials,
-#egr-wrapper .egr-mp-ring-sm > .userpicture,
-#egr-wrapper .egr-mp-ring-sm > .userinitials {
+#egr-wrapper .egr-mp-mentor-ring>.userpicture,
+#egr-wrapper .egr-mp-mentor-ring>.userinitials,
+#egr-wrapper .egr-mp-ring-sm>.userpicture,
+#egr-wrapper .egr-mp-ring-sm>.userinitials {
   position: relative;
   margin: 0;
   border-radius: 50%;
   object-fit: cover;
 }
 
-#egr-wrapper .egr-mp-mentor-ring > .userinitials,
-#egr-wrapper .egr-mp-ring-sm > .userinitials {
+#egr-wrapper .egr-mp-mentor-ring>.userinitials,
+#egr-wrapper .egr-mp-ring-sm>.userinitials {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1587,16 +1589,16 @@
   font-weight: 700;
 }
 
-#egr-wrapper .egr-mp-mentor-ring > .userpicture,
-#egr-wrapper .egr-mp-mentor-ring > .userinitials {
+#egr-wrapper .egr-mp-mentor-ring>.userpicture,
+#egr-wrapper .egr-mp-mentor-ring>.userinitials {
   width: 40px;
   height: 40px;
   border: 2px solid #ffffff;
   font-size: 13px;
 }
 
-#egr-wrapper .egr-mp-ring-sm > .userpicture,
-#egr-wrapper .egr-mp-ring-sm > .userinitials {
+#egr-wrapper .egr-mp-ring-sm>.userpicture,
+#egr-wrapper .egr-mp-ring-sm>.userinitials {
   width: 34px;
   height: 34px;
   font-size: 12px;
@@ -1659,7 +1661,7 @@
   font-weight: 700;
 }
 
-/* VM: Search with clear button, and sort dropdown. */
+/*Search with clear button, and sort dropdown. */
 #egr-wrapper .egr-mp-tools {
   display: flex;
   flex-direction: column;
@@ -1743,7 +1745,7 @@
   outline: none;
 }
 
-/* VM: Visually hidden but read by screen readers (works with Bootstrap 4 and 5). */
+/*Visually hidden but read by screen readers (works with Bootstrap 4 and 5). */
 #egr-wrapper .egr-sr-only {
   position: absolute;
   width: 1px;
@@ -1756,7 +1758,7 @@
   border: 0;
 }
 
-/* VM: The list scrolls once it is taller than about seven mentees. */
+/*The list scrolls once it is taller than about seven mentees. */
 #egr-wrapper .egr-mp-people {
   list-style: none;
   margin: 0;
@@ -1781,7 +1783,7 @@
   background: var(--egr-border);
 }
 
-#egr-wrapper .egr-mp-people > li[hidden] {
+#egr-wrapper .egr-mp-people>li[hidden] {
   display: none;
 }
 
@@ -2126,10 +2128,21 @@
   border-bottom: 0;
 }
 
-#egr-wrapper .egr-mp-course-completed { --egr-mp-c: var(--egr-success); }
-#egr-wrapper .egr-mp-course-inprogress { --egr-mp-c: var(--egr-info); }
-#egr-wrapper .egr-mp-course-failed { --egr-mp-c: var(--egr-danger); }
-#egr-wrapper .egr-mp-course-notyetattempted { --egr-mp-c: var(--egr-muted-border); }
+#egr-wrapper .egr-mp-course-completed {
+  --egr-mp-c: var(--egr-success);
+}
+
+#egr-wrapper .egr-mp-course-inprogress {
+  --egr-mp-c: var(--egr-info);
+}
+
+#egr-wrapper .egr-mp-course-failed {
+  --egr-mp-c: var(--egr-danger);
+}
+
+#egr-wrapper .egr-mp-course-notyetattempted {
+  --egr-mp-c: var(--egr-muted-border);
+}
 
 #egr-wrapper .egr-mp-course-top {
   display: flex;
@@ -2144,7 +2157,7 @@
   font-size: 14px;
 }
 
-/* VM: Bar colour follows the course status. */
+/*Bar colour follows the course status. */
 #egr-wrapper .egr-mp-course-failed .egr-progress::-webkit-progress-value {
   background: var(--egr-danger);
 }
@@ -2476,6 +2489,7 @@
 }
 
 @media (max-width: 640px) {
+
   #egr-wrapper .egr-stats-row,
   #egr-wrapper .egr-stats-row-4 {
     grid-template-columns: repeat(2, 1fr);

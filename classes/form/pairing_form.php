@@ -26,7 +26,7 @@ use local_mentorship\pairing;
  * Admin form to assign one mentor to one or more mentees.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class pairing_form extends \moodleform {
@@ -63,7 +63,7 @@ class pairing_form extends \moodleform {
         $mform->setType('mentorid', PARAM_INT);
         $mform->addRule('mentorid', null, 'required', null, 'client');
 
-        // VM: Several mentees can be paired with the same mentor in one go.
+        //Several mentees can be paired with the same mentor in one go.
         $mform->addElement(
             'autocomplete',
             'menteeids',

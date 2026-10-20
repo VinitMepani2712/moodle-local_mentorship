@@ -21,7 +21,7 @@
  * //VM: query parameters, so the page needs no JavaScript.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -44,9 +44,9 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('mymentorship', 'local_mentorship'));
 $PAGE->set_heading(get_string('mymentorship', 'local_mentorship'));
 $PAGE->set_primary_active_tab('local_mentorship');
-// VM: Same design file as the training report and the admin page.
+//Same design file as the training report and the admin page.
 $PAGE->requires->css('/local/mentorship/styles/report.css');
-// VM: Live search, clear and sort for the mentee list; the page still works without it.
+//Live search, clear and sort for the mentee list; the page still works without it.
 $PAGE->requires->js_call_amd('local_mentorship/mentees', 'init');
 
 $nofilters = ['courseid' => 0, 'q' => '', 'statuses' => [], 'overdueonly' => false, 'sortby' => 'fullname',
@@ -84,8 +84,8 @@ function local_mentorship_index_summary(int $userid, array $nofilters): array {
 $mentors = pairing::get_mentors((int) $USER->id);
 $mentees = pairing::get_mentees((int) $USER->id);
 
-// VM: One report per mentee for the list states. Fine for a handful of mentees per
-// VM: mentor; cache the per-mentee summary if mentors get dozens.
+//One report per mentee for the list states. Fine for a handful of mentees per
+//mentor; cache the per-mentee summary if mentors get dozens.
 $summaries = [];
 foreach ($mentees as $pairingid => $user) {
     $summaries[$pairingid] = local_mentorship_index_summary((int) $user->id, $nofilters);

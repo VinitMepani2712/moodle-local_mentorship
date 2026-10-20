@@ -21,7 +21,7 @@
  * //VM: local_mentorship_pairing so a user can be a mentor and a mentee at the same time.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

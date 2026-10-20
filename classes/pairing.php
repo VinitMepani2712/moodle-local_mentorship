@@ -25,7 +25,7 @@ use stdClass;
  * Pairing API: create, end, validate and query mentor/mentee pairings.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @copyright  2026 Vinit Mepani
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class pairing {
@@ -239,7 +239,7 @@ class pairing {
             return true;
         }
         $member = in_array($userid, [(int) $pairing->mentorid, (int) $pairing->menteeid], true);
-        // VM: Members lose access while either user is suspended, same as the lists hide them.
+        //Members lose access while either user is suspended, same as the lists hide them.
         $suspended = $DB->record_exists_select(
             'user',
             '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',
