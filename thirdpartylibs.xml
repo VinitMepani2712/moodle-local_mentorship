@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>styles/fonts/instrument-sans-latin-400-normal.woff2</location>
+    <name>Instrument Sans (regular)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+  <library>
+    <location>styles/fonts/instrument-sans-latin-500-normal.woff2</location>
+    <name>Instrument Sans (medium)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+  <library>
+    <location>styles/fonts/instrument-sans-latin-600-normal.woff2</location>
+    <name>Instrument Sans (semibold)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+  <library>
+    <location>styles/fonts/instrument-sans-latin-700-normal.woff2</location>
+    <name>Instrument Sans (bold)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+  <library>
+    <location>styles/fonts/jetbrains-mono-latin-400-normal.woff2</location>
+    <name>JetBrains Mono (regular)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+  <library>
+    <location>styles/fonts/jetbrains-mono-latin-600-normal.woff2</location>
+    <name>JetBrains Mono (semibold)</name>
+    <version>5.3.0</version>
+    <license>OFL</license>
+    <licenseversion>1.1</licenseversion>
+    <repository>https://github.com/fontsource/font-files</repository>
+  </library>
+</libraries>

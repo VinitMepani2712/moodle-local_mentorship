@@ -1,0 +1,2565 @@
+/* ============================================================
+
+    Ported from local_staticpage/styles/gradereport.css. Shared design file
+    for view.php, index.php and manage.php, loaded via $PAGE->requires->css().
+    Fonts are bundled in styles/fonts (SIL OFL 1.1, see thirdpartylibs.xml),
+    so the plugin makes no requests to external servers.
+    Changes from the original: <progress> replaces the inline-width bar,
+    [hidden] panels, header meta/actions, back link, table scroll box,
+    and the unused .btn-outline-overdue block removed.
+   ============================================================ */
+
+/* ============================================================
+   01 - DESIGN TOKENS & VARIABLES
+   ============================================================ */
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/instrument-sans-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('fonts/instrument-sans-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/instrument-sans-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Instrument Sans';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/instrument-sans-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
+}
+
+:root {
+  /* Primary Colors */
+  --egr-primary: #1648c9;
+  --egr-primary-hover: #1240b0;
+  --egr-primary-light: #eef2fd;
+  --egr-primary-mid: #c7d5f8;
+
+  /* Status Colors */
+  --egr-success: #0a6b35;
+  --egr-success-bg: #d6f5e3;
+  --egr-success-border: #86efac;
+
+  --egr-info: #075fa8;
+  --egr-info-bg: #dbeafe;
+  --egr-info-border: #93c5fd;
+
+  --egr-warning: #92400e;
+  --egr-warning-bg: #fef3c7;
+  --egr-warning-border: #fcd34d;
+
+  --egr-danger: #b91c1c;
+  --egr-danger-bg: #fee2e2;
+  --egr-danger-border: #fca5a5;
+
+  --egr-orange: #c45100;
+  --egr-orange-bg: #fff3e0;
+  --egr-orange-border: #ffb74d;
+
+  --egr-muted: #64748b;
+  --egr-muted-bg: #f1f5f9;
+  --egr-muted-border: #cbd5e1;
+
+  /* Base Colors */
+  --egr-white: #ffffff;
+  --egr-bg: #f4f6fa;
+  --egr-surface: #ffffff;
+  --egr-border: #dde3ed;
+  --egr-border-strong: #b0bcd4;
+  --egr-text: #0f1729;
+  --egr-text-secondary: #3d4f6e;
+  --egr-text-muted: #64748b;
+
+  /* Border Radius */
+  --egr-radius: 10px;
+  --egr-radius-sm: 6px;
+  --egr-radius-xs: 4px;
+  --egr-radius-pill: 999px;
+
+  /* Shadows */
+  --egr-shadow-xs: 0 1px 2px rgba(15, 23, 41, .05);
+  --egr-shadow-sm: 0 1px 4px rgba(15, 23, 41, .08), 0 1px 2px rgba(15, 23, 41, .04);
+  --egr-shadow-md: 0 4px 12px rgba(15, 23, 41, .10), 0 2px 4px rgba(15, 23, 41, .06);
+  --egr-shadow-lg: 0 8px 24px rgba(15, 23, 41, .12), 0 2px 8px rgba(15, 23, 41, .06);
+
+  /* Transitions */
+  --egr-t: 0.18s ease;
+
+  /* Table Header */
+  --egr-thead-bg: #1a3460;
+  --egr-thead-text: #e8edf8;
+}
+
+
+/* ============================================================
+   02 - BASE WRAPPER & LAYOUT
+   ============================================================ */
+#egr-wrapper {
+  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: var(--egr-text);
+  margin: 0 auto;
+  padding: 24px 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#egr-wrapper *,
+#egr-wrapper *::before,
+#egr-wrapper *::after {
+  box-sizing: border-box;
+}
+
+/*  Panels and the date row are toggled with the hidden attribute. */
+#egr-wrapper [hidden] {
+  display: none !important;
+}
+
+/*  Back link above the report. */
+#egr-wrapper .egr-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  font-weight: 600;
+  color: var(--egr-primary);
+  text-decoration: none;
+}
+
+#egr-wrapper .egr-back:hover {
+  text-decoration: underline;
+}
+
+
+/* ============================================================
+   03 - MENTEE SELECTOR
+   ============================================================ */
+/* ── Mentee Selector ───────────────────────────────────────── */
+#egr-wrapper .egr-mentee-selector {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 12px 20px;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: inline-flex;
+  /* shrink to content width */
+  width: auto;
+  max-width: 100%;
+}
+
+#egr-wrapper .egr-mentee-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+
+#egr-wrapper .egr-mentee-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #344767;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+#egr-wrapper .egr-mentee-label i {
+  color: #1a73e8;
+  font-size: 1rem;
+}
+
+#egr-wrapper .egr-mentee-dropdown {
+  width: 220px;
+  /* fixed width, no flex stretching */
+  height: 38px;
+  padding: 0 32px 0 12px;
+  border: 1.5px solid #c8d3e0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #344767;
+  background-color: #f8fafc;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#egr-wrapper .egr-mentee-dropdown:hover {
+  border-color: #1a73e8;
+}
+
+#egr-wrapper .egr-mentee-dropdown:focus {
+  outline: none;
+  border-color: #1a73e8;
+  box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+  background-color: #fff;
+}
+
+/* ============================================================
+   04 - USER HEADER
+   ============================================================ */
+#egr-wrapper .egr-user-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  background: linear-gradient(135deg, #1a3460 0%, #1648c9 100%);
+  border-radius: var(--egr-radius);
+  margin-bottom: 20px;
+  box-shadow: var(--egr-shadow-md);
+}
+
+#egr-wrapper .egr-user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .35);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+#egr-wrapper .egr-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#egr-wrapper .egr-user-name {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/*  Pairing details under the name, and the action buttons. */
+#egr-wrapper .egr-user-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, .85);
+}
+
+#egr-wrapper .egr-user-status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--egr-radius-pill);
+  background: rgba(255, 255, 255, .18);
+  border: 1px solid rgba(255, 255, 255, .4);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+#egr-wrapper .egr-user-status-active {
+  background: rgba(134, 239, 172, .25);
+  border-color: rgba(134, 239, 172, .7);
+}
+
+#egr-wrapper .egr-user-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#egr-wrapper .egr-user-actions .fa {
+  margin-right: 4px;
+}
+
+#egr-wrapper .egr-user-header .btn-primary {
+  background: rgba(255, 255, 255, .18);
+  border: 1.5px solid rgba(255, 255, 255, .45);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: var(--egr-radius-pill);
+  transition: background var(--egr-t), border-color var(--egr-t);
+  backdrop-filter: blur(4px);
+}
+
+#egr-wrapper .egr-user-header .btn-primary:hover {
+  background: rgba(255, 255, 255, .30);
+  border-color: rgba(255, 255, 255, .70);
+  color: #ffffff;
+}
+
+
+/* ============================================================
+   05 - STATS CARDS
+   ============================================================ */
+#egr-wrapper .egr-stats-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+#egr-wrapper .egr-stat-card {
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  padding: 18px 16px 14px;
+  text-align: center;
+  box-shadow: var(--egr-shadow-sm);
+  transition: transform var(--egr-t), box-shadow var(--egr-t);
+  position: relative;
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: var(--egr-radius) var(--egr-radius) 0 0;
+}
+
+#egr-wrapper .egr-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--egr-shadow-md);
+}
+
+#egr-wrapper .stat-total::before {
+  background: var(--egr-primary);
+}
+
+#egr-wrapper .stat-completed::before {
+  background: var(--egr-success);
+}
+
+#egr-wrapper .stat-failed::before {
+  background: var(--egr-danger);
+}
+
+#egr-wrapper .stat-inprogress::before {
+  background: var(--egr-info);
+}
+
+#egr-wrapper .stat-overdue::before {
+  background: var(--egr-orange);
+}
+
+#egr-wrapper .stat-rate::before {
+  background: var(--egr-warning);
+}
+
+#egr-wrapper .egr-stat-icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+  opacity: .85;
+}
+
+#egr-wrapper .stat-total .egr-stat-icon {
+  color: var(--egr-primary);
+}
+
+#egr-wrapper .stat-completed .egr-stat-icon {
+  color: var(--egr-success);
+}
+
+#egr-wrapper .stat-failed .egr-stat-icon {
+  color: var(--egr-danger);
+}
+
+#egr-wrapper .stat-inprogress .egr-stat-icon {
+  color: var(--egr-info);
+}
+
+#egr-wrapper .stat-overdue .egr-stat-icon {
+  color: var(--egr-orange);
+}
+
+#egr-wrapper .stat-rate .egr-stat-icon {
+  color: var(--egr-warning);
+}
+
+#egr-wrapper .egr-stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--egr-text);
+  letter-spacing: -0.03em;
+}
+
+#egr-wrapper .egr-stat-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-text-muted);
+  margin-top: 5px;
+}
+
+
+/* ============================================================
+   06 - FILTER PANEL BASE STRUCTURE
+   ============================================================ */
+#egr-wrapper .egr-filters {
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  box-shadow: var(--egr-shadow-sm);
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+#egr-wrapper .egr-filters .card-body {
+  padding: 20px 22px 16px;
+}
+
+#egr-wrapper .egr-filter-form {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+#egr-wrapper .egr-filter-zone {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+#egr-wrapper .egr-filter-zone-a {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--egr-border);
+  margin-bottom: 16px;
+}
+
+#egr-wrapper .egr-filter-zone-a .egr-filter-item {
+  flex: 1 1 180px;
+  min-width: 180px;
+  max-width: 100%;
+}
+
+#egr-wrapper .egr-filter-zone-a .egr-filter-item-narrow {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: unset;
+}
+
+#egr-wrapper .egr-filter-zone-b {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--egr-border);
+  margin-bottom: 0;
+  align-items: flex-start;
+}
+
+#egr-wrapper .egr-filter-zone-c {
+  padding-top: 16px;
+  border-top: 1px dashed var(--egr-border);
+  margin-top: 4px;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+#egr-wrapper .egr-filter-item {
+  flex: 1 1 200px;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+#egr-wrapper .egr-filter-item-narrow {
+  flex: 0 0 auto;
+  min-width: 0;
+  max-width: unset;
+}
+
+#egr-wrapper .egr-filter-item-wide {
+  flex: 1 1 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+#egr-wrapper .egr-zone-b-right {
+  margin-left: auto;
+  align-self: flex-end;
+}
+
+#egr-wrapper .egr-filter-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-text-secondary);
+  margin-bottom: 5px;
+  line-height: 1.2;
+}
+
+#egr-wrapper .egr-filter-label .fa {
+  color: var(--egr-primary);
+  margin-right: 3px;
+}
+
+
+/* ============================================================
+   07 - FILTER FORM CONTROLS
+   ============================================================ */
+#egr-wrapper .egr-filter-item .form-control,
+#egr-wrapper .egr-filter-item .form-select {
+  display: block;
+  width: 100%;
+  font-size: 13.5px;
+  font-family: inherit;
+  padding: 7px 11px;
+  border: 1.5px solid var(--egr-border);
+  border-radius: var(--egr-radius-sm);
+  color: var(--egr-text);
+  background: var(--egr-white);
+  transition: border-color var(--egr-t), box-shadow var(--egr-t);
+  height: auto;
+  line-height: 1.4;
+  margin: 0;
+}
+
+#egr-wrapper .egr-filter-item .form-control:focus,
+#egr-wrapper .egr-filter-item .form-select:focus {
+  border-color: var(--egr-primary);
+  box-shadow: 0 0 0 3px rgba(22, 72, 201, .12);
+  outline: none;
+}
+
+#egr-wrapper .egr-sort-dir-group {
+  display: flex;
+  gap: 4px;
+}
+
+#egr-wrapper .egr-sortdir-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 11px !important;
+  border-radius: var(--egr-radius-sm) !important;
+  font-size: 14px !important;
+  border: 1.5px solid var(--egr-border) !important;
+  color: var(--egr-text-secondary) !important;
+  background: var(--egr-white) !important;
+  transition: all var(--egr-t) !important;
+  cursor: pointer;
+  min-width: 40px;
+  height: 36px;
+}
+
+#egr-wrapper .egr-sortdir-btn.active,
+#egr-wrapper .egr-sortdir-btn:hover {
+  background: var(--egr-primary) !important;
+  border-color: var(--egr-primary) !important;
+  color: var(--egr-white) !important;
+  box-shadow: 0 2px 6px rgba(22, 72, 201, .30) !important;
+}
+
+
+/* ============================================================
+   08 - STATUS CHECKBOXES (ZONE B) - DASHBOARD STYLE
+   ============================================================ */
+#egr-wrapper .egr-status-checkboxes {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 8px;
+  align-items: center;
+}
+
+#egr-wrapper .egr-status-chk-label {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  margin: 0;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--egr-white);
+  transition: all var(--egr-t);
+  user-select: none;
+  border: 2px solid transparent;
+  position: relative;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+#egr-wrapper .egr-status-chk-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#egr-wrapper .egr-status-chk-label i.fa {
+  font-size: 16px;
+}
+
+/* Completed - Green */
+#egr-wrapper .egr-chk-completed {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  color: #2e7d32;
+  border-color: #66bb6a;
+}
+
+#egr-wrapper .egr-chk-completed i.fa {
+  color: #2e7d32;
+}
+
+#egr-wrapper .egr-chk-completed:hover {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+}
+
+#egr-wrapper .egr-chk-completed input[type="checkbox"]:checked+i.fa {
+  color: #1b5e20;
+}
+
+/* In Progress - Blue */
+#egr-wrapper .egr-chk-inprogress {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1565c0;
+  border-color: #42a5f5;
+}
+
+#egr-wrapper .egr-chk-inprogress i.fa {
+  color: #1565c0;
+}
+
+#egr-wrapper .egr-chk-inprogress:hover {
+  background: linear-gradient(135deg, #bbdefb 0%, #90caf9 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(21, 101, 192, 0.2);
+}
+
+#egr-wrapper .egr-chk-inprogress input[type="checkbox"]:checked+i.fa {
+  color: #0d47a1;
+}
+
+/* Failed - Red */
+#egr-wrapper .egr-chk-failed {
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  color: #c62828;
+  border-color: #e57373;
+}
+
+#egr-wrapper .egr-chk-failed i.fa {
+  color: #c62828;
+}
+
+#egr-wrapper .egr-chk-failed:hover {
+  background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(198, 40, 40, 0.2);
+}
+
+#egr-wrapper .egr-chk-failed input[type="checkbox"]:checked+i.fa {
+  color: #b71c1c;
+}
+
+/* Not Yet Attempted - Gray */
+#egr-wrapper .egr-chk-notattempted {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+  color: #616161;
+  border-color: #9e9e9e;
+}
+
+#egr-wrapper .egr-chk-notattempted i.fa {
+  color: #616161;
+}
+
+#egr-wrapper .egr-chk-notattempted:hover {
+  background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(97, 97, 97, 0.2);
+}
+
+#egr-wrapper .egr-chk-notattempted input[type="checkbox"]:checked+i.fa {
+  color: #424242;
+}
+
+/* Overdue - Orange */
+#egr-wrapper .egr-chk-overdue {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  color: #e65100;
+  border-color: #ff9800;
+}
+
+#egr-wrapper .egr-chk-overdue i.fa {
+  color: #e65100;
+}
+
+#egr-wrapper .egr-chk-overdue:hover {
+  background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(230, 81, 0, 0.2);
+}
+
+#egr-wrapper .egr-chk-overdue input[type="checkbox"]:checked+i.fa {
+  color: #bf360c;
+}
+
+#egr-wrapper .egr-status-chk-label input[type="checkbox"]:checked {
+  accent-color: currentColor;
+}
+
+#egr-wrapper .egr-status-chk-label:active {
+  transform: translateY(1px);
+}
+
+
+/* ============================================================
+   09 - DATE RANGE CONTROLS (ZONE C)
+   ============================================================ */
+#egr-wrapper .egr-date-group {
+  flex: 1 1 280px;
+  min-width: 260px;
+  max-width: 520px;
+}
+
+#egr-wrapper .egr-date-group-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-text-secondary);
+  margin-bottom: 7px;
+}
+
+#egr-wrapper .egr-date-group-label .fa {
+  color: var(--egr-primary);
+  margin-right: 3px;
+}
+
+#egr-wrapper .egr-date-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#egr-wrapper .egr-date-inputs .form-control {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  padding: 7px 10px;
+  border: 1.5px solid var(--egr-border);
+  border-radius: var(--egr-radius-sm);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--egr-text);
+  background: var(--egr-white);
+  transition: border-color var(--egr-t), box-shadow var(--egr-t);
+}
+
+#egr-wrapper .egr-date-inputs .form-control:focus {
+  border-color: var(--egr-primary);
+  box-shadow: 0 0 0 3px rgba(22, 72, 201, .12);
+  outline: none;
+}
+
+#egr-wrapper .egr-date-sep {
+  font-size: 14px;
+  color: var(--egr-text-muted);
+  flex-shrink: 0;
+  font-weight: 500;
+}
+
+
+/* ============================================================
+   10 - FILTER FOOTER BAR
+   ============================================================ */
+#egr-wrapper .egr-filter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--egr-border);
+  margin-top: 16px;
+  width: 100%;
+}
+
+#egr-wrapper .egr-footer-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#egr-wrapper .egr-footer-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+#egr-wrapper .egr-btn-apply {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  padding: 7px 20px !important;
+  border-radius: var(--egr-radius-sm) !important;
+  letter-spacing: 0.02em;
+}
+
+#egr-wrapper .egr-btn-clear {
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 7px 16px !important;
+  border-radius: var(--egr-radius-sm) !important;
+}
+
+#egr-wrapper .egr-footer-btn {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  padding: 6px 14px !important;
+  border-radius: var(--egr-radius-sm) !important;
+  transition: all var(--egr-t) !important;
+  white-space: nowrap;
+}
+
+#egr-wrapper .egr-footer-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--egr-shadow-sm) !important;
+}
+
+#egr-wrapper .egr-footer-btn.active {
+  background: var(--egr-primary-light) !important;
+  border-color: var(--egr-primary) !important;
+  color: var(--egr-primary) !important;
+}
+
+#egr-wrapper .egr-quick-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-text-muted);
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+#egr-wrapper .egr-footer-btn.btn-outline-success {
+  color: var(--egr-success) !important;
+  border-color: var(--egr-success-border) !important;
+}
+
+#egr-wrapper .egr-footer-btn.btn-outline-success:hover {
+  background: var(--egr-success-bg) !important;
+  color: var(--egr-success) !important;
+}
+
+
+/* ============================================================
+   11 - COURSE BLOCKS
+   ============================================================ */
+#egr-wrapper .egr-report-table-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#egr-wrapper .egr-course-block {
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  box-shadow: var(--egr-shadow-xs);
+  overflow: hidden;
+  transition: box-shadow var(--egr-t);
+}
+
+#egr-wrapper .egr-course-block:hover {
+  box-shadow: var(--egr-shadow-sm);
+}
+
+#egr-wrapper .egr-course-completed {
+  border-left: 5px solid var(--egr-success);
+}
+
+#egr-wrapper .egr-course-inprogress {
+  border-left: 5px solid var(--egr-info);
+}
+
+#egr-wrapper .egr-course-notyetattempted {
+  border-left: 5px solid var(--egr-muted-border);
+}
+
+#egr-wrapper .egr-course-failed {
+  border-left: 5px solid var(--egr-danger);
+}
+
+#egr-wrapper .egr-course-block[data-has-overdue="true"] {
+  border-left: 5px solid var(--egr-orange);
+}
+
+#egr-wrapper .egr-course-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background-color var(--egr-t);
+  user-select: none;
+  gap: 16px;
+}
+
+#egr-wrapper .egr-course-header:hover {
+  background-color: #f7f9fc;
+}
+
+#egr-wrapper .egr-course-header.egr-expanded {
+  background-color: var(--egr-primary-light);
+  border-bottom: 1px solid var(--egr-primary-mid);
+}
+
+#egr-wrapper .egr-course-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+#egr-wrapper .egr-chevron {
+  color: var(--egr-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+  width: 14px;
+  transition: color var(--egr-t);
+}
+
+#egr-wrapper .egr-course-header:hover .egr-chevron,
+#egr-wrapper .egr-course-header.egr-expanded .egr-chevron {
+  color: var(--egr-primary);
+}
+
+#egr-wrapper .egr-course-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+#egr-wrapper .egr-course-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--egr-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+#egr-wrapper .egr-course-meta {
+  font-size: 12px;
+  color: var(--egr-text-muted);
+  margin-top: 2px;
+}
+
+#egr-wrapper .egr-overdue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--egr-orange-bg);
+  color: var(--egr-orange);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: var(--egr-radius-pill);
+  border: 1px solid var(--egr-orange-border);
+  margin-left: 8px;
+}
+
+#egr-wrapper .egr-course-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+
+/* ============================================================
+   12 - PROGRESS BARS & STATUS BADGES
+   ============================================================ */
+#egr-wrapper .egr-completion-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 130px;
+}
+
+/*  Native <progress> replaces the div bar with an inline width. */
+#egr-wrapper .egr-progress {
+  flex: 1;
+  min-width: 80px;
+  height: 7px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 0;
+  border-radius: var(--egr-radius-pill);
+  background: var(--egr-muted-bg);
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-progress::-webkit-progress-bar {
+  background: var(--egr-muted-bg);
+  border-radius: var(--egr-radius-pill);
+}
+
+#egr-wrapper .egr-progress::-webkit-progress-value {
+  background: var(--egr-info);
+  border-radius: var(--egr-radius-pill);
+  transition: width 0.6s cubic-bezier(.4, 0, .2, 1);
+}
+
+#egr-wrapper .egr-progress::-moz-progress-bar {
+  background: var(--egr-info);
+  border-radius: var(--egr-radius-pill);
+}
+
+#egr-wrapper .egr-progress.egr-progress-complete::-webkit-progress-value {
+  background: var(--egr-success);
+}
+
+#egr-wrapper .egr-progress.egr-progress-complete::-moz-progress-bar {
+  background: var(--egr-success);
+}
+
+#egr-wrapper .egr-progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--egr-text-secondary);
+  min-width: 36px;
+  text-align: right;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+#egr-wrapper .egr-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: var(--egr-radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+#egr-wrapper .egr-badge-completed {
+  background: var(--egr-success-bg);
+  color: var(--egr-success);
+  border: 1px solid var(--egr-success-border);
+}
+
+#egr-wrapper .egr-badge-inprogress {
+  background: var(--egr-info-bg);
+  color: var(--egr-info);
+  border: 1px solid var(--egr-info-border);
+}
+
+#egr-wrapper .egr-badge-notattempted {
+  background: var(--egr-muted-bg);
+  color: var(--egr-muted);
+  border: 1px solid var(--egr-muted-border);
+}
+
+#egr-wrapper .egr-badge-failed {
+  background: var(--egr-danger-bg);
+  color: var(--egr-danger);
+  border: 1px solid var(--egr-danger-border);
+}
+
+#egr-wrapper .egr-badge-nottracked {
+  background: var(--egr-muted-bg);
+  color: var(--egr-muted);
+  border: 1px solid var(--egr-muted-border);
+}
+
+#egr-wrapper .egr-badge-overdue {
+  background: var(--egr-orange-bg);
+  color: var(--egr-orange);
+  border: 1px solid var(--egr-orange-border);
+  animation: egr-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes egr-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: .6;
+  }
+}
+
+
+/* ============================================================
+   13 - GRADE SUMMARY PANEL
+   ============================================================ */
+#egr-wrapper .egr-activities-panel {
+  background: #f7f9fc;
+  border-top: 1px solid var(--egr-border);
+}
+
+#egr-wrapper .egr-grade-summary {
+  margin: 16px 20px;
+  background: var(--egr-white);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  overflow: hidden;
+  box-shadow: var(--egr-shadow-xs);
+}
+
+#egr-wrapper .egr-grade-summary-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-thead-text) !important;
+  background: var(--egr-thead-bg);
+  margin: 0 !important;
+  padding: 9px 16px !important;
+}
+
+#egr-wrapper .egr-grade-items-list {
+  padding: 0;
+}
+
+#egr-wrapper .egr-grade-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--egr-border);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--egr-text);
+  transition: background var(--egr-t);
+}
+
+#egr-wrapper .egr-grade-item-row:last-child {
+  border-bottom: none;
+}
+
+#egr-wrapper .egr-grade-item-row:hover {
+  background: var(--egr-primary-light);
+}
+
+
+/* ============================================================
+   14 - ACTIVITIES TABLE
+   ============================================================ */
+/*  Wide activity tables scroll inside their panel instead of the page. */
+#egr-wrapper .egr-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#egr-wrapper .egr-activities-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+#egr-wrapper .egr-sortable-th:focus-visible,
+#egr-wrapper .egr-course-header:focus-visible {
+  outline: 3px solid var(--egr-primary-mid);
+  outline-offset: -3px;
+}
+
+#egr-wrapper .egr-activities-table thead {
+  background: var(--egr-thead-bg);
+  color: var(--egr-thead-text);
+}
+
+#egr-wrapper .egr-activities-table thead th {
+  padding: 11px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.55px;
+  white-space: nowrap;
+  border-bottom: 2px solid #0f2340;
+  vertical-align: middle;
+  color: var(--egr-thead-text);
+}
+
+#egr-wrapper .egr-sortable-th {
+  cursor: pointer;
+  transition: background var(--egr-t);
+  user-select: none;
+}
+
+#egr-wrapper .egr-sortable-th:hover {
+  background: #224a70;
+}
+
+#egr-wrapper .egr-sort-indicator {
+  display: inline-block;
+  margin-left: 5px;
+  opacity: .5;
+  font-size: 10px;
+  vertical-align: middle;
+  transition: opacity var(--egr-t);
+}
+
+#egr-wrapper .egr-sortable-th:hover .egr-sort-indicator {
+  opacity: 1;
+}
+
+#egr-wrapper .egr-activities-table tbody tr {
+  border-bottom: 1px solid var(--egr-border);
+  transition: background-color var(--egr-t);
+}
+
+#egr-wrapper .egr-activities-table tbody tr:nth-child(even) {
+  background: #fafbfd;
+}
+
+#egr-wrapper .egr-activities-table tbody tr:hover {
+  background: var(--egr-primary-light) !important;
+}
+
+#egr-wrapper .egr-activities-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+#egr-wrapper .egr-activities-table td {
+  padding: 10px 14px;
+  vertical-align: middle;
+  color: var(--egr-text);
+}
+
+#egr-wrapper .egr-row-overdue {
+  background: #fff8f0 !important;
+  border-left: 3px solid var(--egr-orange-border);
+}
+
+#egr-wrapper .egr-row-overdue:hover {
+  background: var(--egr-orange-bg) !important;
+}
+
+#egr-wrapper .egr-td-activity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 160px;
+}
+
+#egr-wrapper .egr-activity-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 3px;
+}
+
+#egr-wrapper .egr-td-activity a {
+  color: var(--egr-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+#egr-wrapper .egr-td-activity a:hover {
+  text-decoration: underline;
+  color: var(--egr-primary-hover);
+}
+
+#egr-wrapper .egr-type-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  background: var(--egr-muted-bg);
+  color: var(--egr-text-secondary);
+  border: 1px solid var(--egr-muted-border);
+  border-radius: var(--egr-radius-xs);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#egr-wrapper .egr-grade-value {
+  font-weight: 600;
+  color: var(--egr-text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+}
+
+#egr-wrapper .egr-no-grade {
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-passed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--egr-success);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+#egr-wrapper .egr-failed {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--egr-danger);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+#egr-wrapper .egr-td-date {
+  font-size: 12.5px;
+  color: var(--egr-text-secondary);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+#egr-wrapper .egr-date-overdue {
+  color: var(--egr-orange);
+  font-weight: 700;
+}
+
+#egr-wrapper .egr-date-overdue .fa {
+  margin-right: 3px;
+}
+
+#egr-wrapper .egr-no-activities {
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--egr-text-muted);
+  font-style: italic;
+  font-size: 13.5px;
+  background: var(--egr-white);
+}
+
+
+/* ============================================================
+   14b - MY MENTORSHIP PAGE ( index.php)
+   ============================================================ */
+/* Layout */
+#egr-wrapper.egr-mp {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#egr-wrapper .egr-mp-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+#egr-wrapper .egr-mp-side {
+  flex: 1 1 320px;
+  max-width: 370px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#egr-wrapper .egr-mp-main {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#egr-wrapper .egr-mp-panel {
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: 14px;
+  box-shadow: var(--egr-shadow-sm);
+}
+
+#egr-wrapper .egr-mp-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--egr-text-muted);
+  margin: 0;
+}
+
+#egr-wrapper .egr-mp-panel-head {
+  padding: 14px 18px 10px;
+}
+
+#egr-wrapper .egr-mp-none {
+  padding: 8px 18px 16px;
+  font-size: 13px;
+  color: var(--egr-text-muted);
+}
+
+/* Banner */
+#egr-wrapper .egr-mp-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+  padding: 24px 28px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 85% -20%, rgba(255, 255, 255, .18) 0, rgba(255, 255, 255, 0) 45%),
+    linear-gradient(135deg, #1a3460 0%, #1648c9 100%);
+  color: #ffffff;
+  box-shadow: var(--egr-shadow-lg);
+}
+
+#egr-wrapper .egr-mp-banner-title {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+#egr-wrapper .egr-mp-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  opacity: .75;
+}
+
+#egr-wrapper .egr-mp-heading {
+  margin: 2px 0 0;
+  line-height: 1.15;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+#egr-wrapper .egr-mp-counters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+#egr-wrapper .egr-mp-counter {
+  display: flex;
+  flex-direction: column;
+  min-width: 108px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .14);
+  border: 1px solid rgba(255, 255, 255, .28);
+}
+
+#egr-wrapper .egr-mp-counter-value {
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+#egr-wrapper .egr-mp-counter-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: .9;
+}
+
+/* Mentor card */
+#egr-wrapper .egr-mp-mentor {
+  padding: 16px 18px;
+}
+
+#egr-wrapper .egr-mp-mentor-who {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+#egr-wrapper .egr-mp-mentor-ring {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--egr-primary), #86a8f0);
+  flex: none;
+}
+
+/*  Avatars are sized by their container so a photo (img) and Moodle's
+   initials (span.userinitials) look the same. */
+#egr-wrapper .egr-mp-banner > .userpicture,
+#egr-wrapper .egr-mp-banner > .userinitials {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  flex: none;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .4);
+  object-fit: cover;
+}
+
+#egr-wrapper .egr-mp-banner > .userinitials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, .18);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+#egr-wrapper .egr-mp-mentor-ring > .userpicture,
+#egr-wrapper .egr-mp-mentor-ring > .userinitials,
+#egr-wrapper .egr-mp-ring-sm > .userpicture,
+#egr-wrapper .egr-mp-ring-sm > .userinitials {
+  position: relative;
+  margin: 0;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+#egr-wrapper .egr-mp-mentor-ring > .userinitials,
+#egr-wrapper .egr-mp-ring-sm > .userinitials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--egr-primary-light);
+  color: var(--egr-primary);
+  font-weight: 700;
+}
+
+#egr-wrapper .egr-mp-mentor-ring > .userpicture,
+#egr-wrapper .egr-mp-mentor-ring > .userinitials {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #ffffff;
+  font-size: 13px;
+}
+
+#egr-wrapper .egr-mp-ring-sm > .userpicture,
+#egr-wrapper .egr-mp-ring-sm > .userinitials {
+  width: 34px;
+  height: 34px;
+  font-size: 12px;
+}
+
+#egr-wrapper .egr-mp-mentor-name {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+#egr-wrapper .egr-mp-mentor-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+#egr-wrapper .egr-mp-btn-soft {
+  flex: 1;
+  border-radius: 8px;
+  background: var(--egr-primary-light);
+  color: var(--egr-primary);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#egr-wrapper .egr-mp-btn-soft:hover {
+  background: var(--egr-primary-mid);
+  color: var(--egr-primary-hover);
+}
+
+#egr-wrapper .egr-mp-btn-icon {
+  width: 40px;
+  border-radius: 8px;
+  border: 1.5px solid var(--egr-border);
+  color: var(--egr-text-secondary);
+}
+
+#egr-wrapper .egr-mp-btn-soft .fa {
+  margin-right: 4px;
+}
+
+/* Mentee list */
+#egr-wrapper .egr-mp-list {
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-mp-list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 12px;
+}
+
+#egr-wrapper .egr-mp-count {
+  padding: 1px 9px;
+  border-radius: var(--egr-radius-pill);
+  background: var(--egr-primary-light);
+  color: var(--egr-primary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/*  Search with clear button, and sort dropdown. */
+#egr-wrapper .egr-mp-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0 18px 12px;
+}
+
+#egr-wrapper .egr-mp-search,
+#egr-wrapper .egr-mp-sort {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#egr-wrapper .egr-mp-search-icon,
+#egr-wrapper .egr-mp-sort-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--egr-text-muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+#egr-wrapper .egr-mp-search input,
+#egr-wrapper .egr-mp-sort select {
+  width: 100%;
+  height: 38px;
+  padding: 0 36px 0 34px;
+  border: 1.5px solid var(--egr-border);
+  border-radius: 8px;
+  background-color: #f8fafc;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--egr-text);
+}
+
+#egr-wrapper .egr-mp-search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+#egr-wrapper .egr-mp-sort select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+#egr-wrapper .egr-mp-search input:focus,
+#egr-wrapper .egr-mp-sort select:focus {
+  outline: none;
+  border-color: var(--egr-primary);
+  box-shadow: 0 0 0 3px rgba(22, 72, 201, .12);
+  background-color: #ffffff;
+}
+
+#egr-wrapper .egr-mp-search-clear {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--egr-muted-bg);
+  color: var(--egr-text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#egr-wrapper .egr-mp-search-clear:hover,
+#egr-wrapper .egr-mp-search-clear:focus-visible {
+  background: var(--egr-primary-mid);
+  color: var(--egr-primary);
+  outline: none;
+}
+
+/*  Visually hidden but read by screen readers (works with Bootstrap 4 and 5). */
+#egr-wrapper .egr-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/*  The list scrolls once it is taller than about seven mentees. */
+#egr-wrapper .egr-mp-people {
+  list-style: none;
+  margin: 0;
+  padding: 8px 10px 10px;
+  border-top: 1px solid var(--egr-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 480px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--egr-border-strong) transparent;
+}
+
+#egr-wrapper .egr-mp-people::-webkit-scrollbar {
+  width: 8px;
+}
+
+#egr-wrapper .egr-mp-people::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: var(--egr-border);
+}
+
+#egr-wrapper .egr-mp-people > li[hidden] {
+  display: none;
+}
+
+#egr-wrapper .egr-mp-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--egr-text);
+  text-decoration: none;
+  transition: background var(--egr-t), box-shadow var(--egr-t);
+}
+
+#egr-wrapper .egr-mp-person:hover {
+  background: #f7f9fc;
+  color: var(--egr-text);
+}
+
+#egr-wrapper .egr-mp-person-active,
+#egr-wrapper .egr-mp-person-active:hover {
+  background: #ffffff;
+  border-color: var(--egr-primary-mid);
+  box-shadow: 0 4px 12px rgba(22, 72, 201, .14);
+}
+
+#egr-wrapper .egr-mp-person-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#egr-wrapper .egr-mp-person-name {
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#egr-wrapper .egr-mp-person-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-mp-person-pct {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--egr-text-secondary);
+}
+
+/* State colour: --egr-mp-c drives dots, rings and pills. */
+#egr-wrapper .egr-mp-state-ontrack {
+  --egr-mp-c: var(--egr-info);
+  --egr-mp-bg: var(--egr-info-bg);
+  --egr-mp-bd: var(--egr-info-border);
+}
+
+#egr-wrapper .egr-mp-state-attention {
+  --egr-mp-c: var(--egr-orange);
+  --egr-mp-bg: var(--egr-orange-bg);
+  --egr-mp-bd: var(--egr-orange-border);
+}
+
+#egr-wrapper .egr-mp-state-notstarted {
+  --egr-mp-c: var(--egr-muted);
+  --egr-mp-bg: var(--egr-muted-bg);
+  --egr-mp-bd: var(--egr-muted-border);
+}
+
+#egr-wrapper .egr-mp-state-done {
+  --egr-mp-c: var(--egr-success);
+  --egr-mp-bg: var(--egr-success-bg);
+  --egr-mp-bd: var(--egr-success-border);
+}
+
+#egr-wrapper .egr-mp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--egr-mp-c, var(--egr-muted-border));
+  flex: none;
+}
+
+/* Progress rings: SVG circle, length set by the stroke-dasharray attribute. */
+#egr-wrapper .egr-mp-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+#egr-wrapper .egr-mp-ring svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+#egr-wrapper .egr-mp-ring circle {
+  fill: none;
+  stroke-width: 3.2;
+}
+
+#egr-wrapper .egr-mp-ring-track {
+  stroke: #e3e8f1;
+}
+
+#egr-wrapper .egr-mp-ring-value {
+  stroke: var(--egr-mp-c, var(--egr-primary));
+  stroke-linecap: round;
+}
+
+#egr-wrapper .egr-mp-ring-sm {
+  width: 46px;
+  height: 46px;
+}
+
+#egr-wrapper .egr-mp-ring-lg {
+  width: 116px;
+  height: 116px;
+}
+
+#egr-wrapper .egr-mp-ring-lg circle {
+  stroke-width: 2.6;
+}
+
+#egr-wrapper .egr-mp-ring-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#egr-wrapper .egr-mp-ring-pct {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+#egr-wrapper .egr-mp-ring-label {
+  margin-top: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--egr-text-muted);
+}
+
+/* Selected mentee */
+#egr-wrapper .egr-mp-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  padding: 22px 24px;
+}
+
+#egr-wrapper .egr-mp-hero-info {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+#egr-wrapper .egr-mp-hero-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+#egr-wrapper .egr-mp-hero-name {
+  margin: 0;
+  color: var(--egr-text);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+#egr-wrapper .egr-mp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 11px;
+  border-radius: var(--egr-radius-pill);
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--egr-mp-bg);
+  color: var(--egr-mp-c);
+  border: 1px solid var(--egr-mp-bd);
+}
+
+#egr-wrapper .egr-mp-hero-summary {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  color: var(--egr-text-secondary);
+}
+
+#egr-wrapper .egr-mp-hero-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 210px;
+}
+
+#egr-wrapper .egr-mp-btn-main {
+  border-radius: 8px;
+  border-color: var(--egr-primary);
+  background: var(--egr-primary);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(22, 72, 201, .3);
+}
+
+#egr-wrapper .egr-mp-btn-main:hover,
+#egr-wrapper .egr-mp-btn-main:focus {
+  border-color: var(--egr-primary-hover);
+  background: var(--egr-primary-hover);
+  color: #ffffff;
+}
+
+#egr-wrapper .egr-mp-btn-line {
+  border-radius: 8px;
+  border: 1.5px solid var(--egr-border);
+  background: var(--egr-surface);
+  color: var(--egr-text-secondary);
+  font-weight: 600;
+}
+
+#egr-wrapper .egr-mp-btn-line:hover {
+  border-color: var(--egr-border-strong);
+  background: #f7f9fc;
+  color: var(--egr-text);
+}
+
+#egr-wrapper .egr-mp-hero-actions .fa {
+  margin-right: 6px;
+}
+
+#egr-wrapper .egr-mp-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+#egr-wrapper .egr-mp-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  box-shadow: var(--egr-shadow-xs);
+}
+
+#egr-wrapper .egr-mp-tile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 15px;
+  flex: none;
+}
+
+#egr-wrapper .egr-mp-tile-total .egr-mp-tile-icon {
+  background: var(--egr-primary-light);
+  color: var(--egr-primary);
+}
+
+#egr-wrapper .egr-mp-tile-completed .egr-mp-tile-icon {
+  background: var(--egr-success-bg);
+  color: var(--egr-success);
+}
+
+#egr-wrapper .egr-mp-tile-inprogress .egr-mp-tile-icon {
+  background: var(--egr-info-bg);
+  color: var(--egr-info);
+}
+
+#egr-wrapper .egr-mp-tile-overdue .egr-mp-tile-icon {
+  background: var(--egr-orange-bg);
+  color: var(--egr-orange);
+}
+
+#egr-wrapper .egr-mp-tile-value {
+  display: block;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+#egr-wrapper .egr-mp-tile-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-mp-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+#egr-wrapper .egr-mp-courses {
+  flex: 3 1 380px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-mp-courses .egr-mp-panel-head {
+  border-bottom: 1px solid var(--egr-border);
+  padding-bottom: 12px;
+}
+
+#egr-wrapper .egr-mp-course-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#egr-wrapper .egr-mp-course {
+  padding: 12px 18px;
+  border-bottom: 1px solid #eef1f6;
+}
+
+#egr-wrapper .egr-mp-course:last-child {
+  border-bottom: 0;
+}
+
+#egr-wrapper .egr-mp-course-completed { --egr-mp-c: var(--egr-success); }
+#egr-wrapper .egr-mp-course-inprogress { --egr-mp-c: var(--egr-info); }
+#egr-wrapper .egr-mp-course-failed { --egr-mp-c: var(--egr-danger); }
+#egr-wrapper .egr-mp-course-notyetattempted { --egr-mp-c: var(--egr-muted-border); }
+
+#egr-wrapper .egr-mp-course-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#egr-wrapper .egr-mp-course-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/*  Bar colour follows the course status. */
+#egr-wrapper .egr-mp-course-failed .egr-progress::-webkit-progress-value {
+  background: var(--egr-danger);
+}
+
+#egr-wrapper .egr-mp-course-failed .egr-progress::-moz-progress-bar {
+  background: var(--egr-danger);
+}
+
+#egr-wrapper .egr-mp-course-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 0 18px;
+}
+
+#egr-wrapper .egr-mp-aside {
+  flex: 2 1 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+#egr-wrapper .egr-mp-attention {
+  border-top: 4px solid var(--egr-orange);
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-mp-attention .egr-mp-panel-label {
+  color: var(--egr-orange);
+}
+
+#egr-wrapper .egr-mp-recent {
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-mp-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#egr-wrapper .egr-mp-items li {
+  padding: 10px 18px;
+  border-top: 1px solid #eef1f6;
+}
+
+#egr-wrapper .egr-mp-item-name {
+  display: block;
+  font-weight: 700;
+  font-size: 13.5px;
+}
+
+#egr-wrapper .egr-mp-item-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-mp-item-due {
+  color: var(--egr-orange);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#egr-wrapper .egr-mp-allclear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 18px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--egr-success);
+}
+
+#egr-wrapper .egr-mp-recent-item {
+  display: flex;
+  gap: 10px;
+}
+
+#egr-wrapper .egr-mp-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--egr-success-bg);
+  color: var(--egr-success);
+  font-size: 10px;
+  flex: none;
+}
+
+@media (max-width: 900px) {
+  #egr-wrapper .egr-mp-side {
+    max-width: 100%;
+  }
+
+  #egr-wrapper .egr-mp-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #egr-wrapper .egr-mp-hero-actions {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+#egr-wrapper .egr-empty {
+  max-width: 560px;
+  margin: 30px auto;
+  padding: 36px 28px;
+  text-align: center;
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  box-shadow: var(--egr-shadow-sm);
+}
+
+#egr-wrapper .egr-empty-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: var(--egr-primary-light);
+  color: var(--egr-primary);
+  font-size: 26px;
+}
+
+#egr-wrapper .egr-empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+#egr-wrapper .egr-empty-text {
+  color: var(--egr-text-muted);
+  margin: 0;
+}
+
+
+/* ============================================================
+   14c - ADMIN PAIRINGS PAGE ( manage.php)
+   ============================================================ */
+#egr-wrapper .egr-stats-row-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#egr-wrapper .egr-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, .35);
+  background: rgba(255, 255, 255, .15);
+  color: #ffffff;
+  font-size: 24px;
+}
+
+#egr-wrapper .egr-card {
+  background: var(--egr-surface);
+  border: 1px solid var(--egr-border);
+  border-radius: var(--egr-radius);
+  box-shadow: var(--egr-shadow-sm);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+#egr-wrapper .egr-card-flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+#egr-wrapper .egr-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 22px;
+}
+
+#egr-wrapper .egr-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--egr-text-secondary);
+  margin: 0 0 14px;
+}
+
+#egr-wrapper .egr-card-head .egr-card-title {
+  margin: 0;
+}
+
+#egr-wrapper .egr-card-title .fa {
+  color: var(--egr-primary);
+}
+
+#egr-wrapper .egr-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  border-radius: var(--egr-radius-sm);
+  background: var(--egr-primary-light);
+  border: 1px solid var(--egr-primary-mid);
+  color: var(--egr-text-secondary);
+  font-size: 13px;
+}
+
+#egr-wrapper .egr-note .fa {
+  color: var(--egr-primary);
+  margin-top: 2px;
+}
+
+/* Moodle form inside a card: no extra fieldset spacing. */
+#egr-wrapper .egr-card .mform {
+  margin: 0;
+}
+
+#egr-wrapper .egr-card .mform fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+#egr-wrapper .egr-change-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin-bottom: 16px;
+}
+
+#egr-wrapper .egr-pair-user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+#egr-wrapper .egr-pair-user .userpicture {
+  margin: 0;
+  border-radius: 50%;
+}
+
+#egr-wrapper .egr-pair-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-chip-both {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: var(--egr-radius-pill);
+  background: var(--egr-warning-bg);
+  color: var(--egr-warning);
+  border: 1px solid var(--egr-warning-border);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#egr-wrapper .egr-pairings-table td {
+  padding: 10px 14px;
+}
+
+#egr-wrapper .egr-pairings-table thead th:first-child,
+#egr-wrapper .egr-pairings-table td:first-child {
+  padding-left: 22px;
+}
+
+#egr-wrapper .egr-row-ended td {
+  color: var(--egr-text-muted);
+}
+
+#egr-wrapper .egr-row-ended .egr-pair-user {
+  font-weight: 500;
+}
+
+#egr-wrapper .egr-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+#egr-wrapper .egr-row-actions form {
+  display: inline;
+  margin: 0;
+}
+
+#egr-wrapper .egr-row-actions .btn {
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: var(--egr-radius-sm);
+  white-space: nowrap;
+}
+
+#egr-wrapper .egr-row-actions .fa {
+  margin-right: 3px;
+}
+
+
+/* ============================================================
+   15 - RESPONSIVE STYLES
+   ============================================================ */
+@media (max-width: 1200px) {
+  #egr-wrapper .egr-stats-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  #egr-wrapper .egr-stats-row,
+  #egr-wrapper .egr-stats-row-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  #egr-wrapper .egr-filter-zone {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #egr-wrapper .egr-filter-zone-a .egr-filter-item,
+  #egr-wrapper .egr-filter-item {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #egr-wrapper .egr-zone-b-right {
+    margin-left: 0;
+    align-self: stretch;
+  }
+
+  #egr-wrapper .egr-date-group {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  #egr-wrapper .egr-course-name {
+    white-space: normal;
+  }
+
+  #egr-wrapper .egr-user-header {
+    flex-wrap: wrap;
+  }
+
+  #egr-wrapper .egr-completion-col {
+    min-width: 90px;
+  }
+
+  #egr-wrapper .egr-filter-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #egr-wrapper .egr-footer-right {
+    flex-wrap: wrap;
+  }
+
+  #egr-wrapper .egr-status-checkboxes {
+    gap: 8px !important;
+  }
+
+  #egr-wrapper .egr-status-chk-label {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  #egr-wrapper .egr-stat-value {
+    font-size: 24px;
+  }
+
+  #egr-wrapper .egr-stat-card {
+    padding: 14px 10px 10px;
+  }
+
+  #egr-wrapper .egr-course-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  #egr-wrapper .egr-course-header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  #egr-wrapper .egr-status-chk-label {
+    flex: 1 1 100%;
+  }
+}
+
+
+/* ============================================================
+   16 - PRINT STYLES
+   ============================================================ */
+@media print {
+
+  #egr-wrapper .egr-filters,
+  #egr-wrapper .egr-mentee-selector,
+  #egr-wrapper .egr-filter-footer {
+    display: none !important;
+  }
+
+  #egr-wrapper .egr-activities-panel {
+    display: block !important;
+  }
+
+  #egr-wrapper .egr-course-block,
+  #egr-wrapper .egr-stat-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+}

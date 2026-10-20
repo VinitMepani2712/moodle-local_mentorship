@@ -1,0 +1,142 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_mentorship/index_summary
+
+    Summary of the selected mentee on the My mentorship page.
+
+    Context variables required for this template:
+    * name, pct, state, stateshort, summary
+    * reporturl, messageurl, messagelabel
+    * stats [{cls, icon, value, label}]
+    * hascourses, courses [{name, pct, pctcomplete, status, badge}]
+    * hasoverdue, overdue [{name, course, due}]
+    * hasrecent, recent [{name, when}]
+
+    Example data must never contain two closing braces in a row: they end this comment.
+
+    Example context (json):
+    {
+        "name": "test user", "pct": 40, "state": "attention", "stateshort": "Needs attention",
+        "summary": "2 of 5 courses complete, 1 overdue to follow up on.",
+        "reporturl": "#", "messageurl": "#", "messagelabel": "Message test user",
+        "stats": [
+            {"cls": "total", "icon": "fa-book", "value": 5, "label": "Total courses"}
+        ],
+        "hascourses": true,
+        "courses": [
+            {"name": "Safety Assessment", "pct": 100, "pctcomplete": true, "status": "completed", "badge": false}
+        ],
+        "hasoverdue": true,
+        "overdue": [
+            {"name": "Court report", "course": "Court Preparation", "due": "Due 15 October 2026"}
+        ],
+        "hasrecent": false,
+        "recent": []
+    }
+}}
+<section class="egr-mp-panel egr-mp-hero egr-mp-state-{{state}}">
+    <div class="egr-mp-ring egr-mp-ring-lg" role="img" aria-label="{{#str}} overallprogress, local_mentorship, {{pct}} {{/str}}">
+        <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+            <circle class="egr-mp-ring-track" cx="18" cy="18" r="16"></circle>
+            {{#pct}}<circle class="egr-mp-ring-value" cx="18" cy="18" r="16" pathLength="100" stroke-dasharray="{{pct}} 100"></circle>{{/pct}}
+        </svg>
+        <span class="egr-mp-ring-center">
+            <span class="egr-mp-ring-pct">{{pct}}%</span>
+            <span class="egr-mp-ring-label">{{#str}} overall, local_mentorship {{/str}}</span>
+        </span>
+    </div>
+    <div class="egr-mp-hero-info">
+        <div class="egr-mp-hero-title">
+            <h3 class="egr-mp-hero-name">{{name}}</h3>
+            <span class="egr-mp-pill"><span class="egr-mp-dot" aria-hidden="true"></span>{{stateshort}}</span>
+        </div>
+        <p class="egr-mp-hero-summary">{{summary}}</p>
+    </div>
+    <div class="egr-mp-hero-actions">
+        <a class="btn btn-primary egr-mp-btn-main" href="{{reporturl}}"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{#str}} openreport, local_mentorship {{/str}}</a>
+        <a class="btn egr-mp-btn-line" href="{{messageurl}}" aria-label="{{messagelabel}}"><i class="fa fa-comment" aria-hidden="true"></i> {{#str}} message, local_mentorship {{/str}}</a>
+    </div>
+</section>
+
+<div class="egr-mp-tiles">
+    {{#stats}}
+        <div class="egr-mp-tile egr-mp-tile-{{cls}}">
+            <span class="egr-mp-tile-icon"><i class="fa {{icon}}" aria-hidden="true"></i></span>
+            <span>
+                <span class="egr-mp-tile-value">{{value}}</span>
+                <span class="egr-mp-tile-label">{{label}}</span>
+            </span>
+        </div>
+    {{/stats}}
+</div>
+
+<div class="egr-mp-detail">
+    <section class="egr-mp-panel egr-mp-courses">
+        <h4 class="egr-mp-panel-label egr-mp-panel-head">{{#str}} courses, local_mentorship {{/str}}</h4>
+        {{#hascourses}}
+            <ul class="egr-mp-course-list">
+                {{#courses}}
+                    <li class="egr-mp-course egr-mp-course-{{status}}">
+                        <div class="egr-mp-course-top">
+                            <span class="egr-mp-dot" aria-hidden="true"></span>
+                            <span class="egr-mp-course-name">{{name}}</span>
+                            {{#badge}}{{> local_mentorship/report_badge }}{{/badge}}
+                        </div>
+                        <div class="egr-mp-course-bar">
+                            <progress class="egr-progress {{#pctcomplete}}egr-progress-complete{{/pctcomplete}}" value="{{pct}}" max="100" aria-label="{{name}}">{{pct}}%</progress>
+                            <span class="egr-progress-text">{{pct}}%</span>
+                        </div>
+                    </li>
+                {{/courses}}
+            </ul>
+        {{/hascourses}}
+        {{^hascourses}}<div class="egr-mp-none">{{#str}} nocourses, local_mentorship {{/str}}</div>{{/hascourses}}
+    </section>
+
+    <div class="egr-mp-aside">
+        <section class="egr-mp-panel egr-mp-attention">
+            <h4 class="egr-mp-panel-label egr-mp-panel-head">{{#str}} needsattention, local_mentorship {{/str}}</h4>
+            {{#hasoverdue}}
+                <ul class="egr-mp-items">
+                    {{#overdue}}
+                        <li>
+                            <span class="egr-mp-item-name">{{name}}</span>
+                            <span class="egr-mp-item-meta"><span>{{course}}</span><span class="egr-mp-item-due">{{due}}</span></span>
+                        </li>
+                    {{/overdue}}
+                </ul>
+            {{/hasoverdue}}
+            {{^hasoverdue}}<div class="egr-mp-allclear"><i class="fa fa-check-circle" aria-hidden="true"></i> {{#str}} nothingoverdue, local_mentorship {{/str}}</div>{{/hasoverdue}}
+        </section>
+
+        <section class="egr-mp-panel egr-mp-recent">
+            <h4 class="egr-mp-panel-label egr-mp-panel-head">{{#str}} recentlycompleted, local_mentorship {{/str}}</h4>
+            {{#hasrecent}}
+                <ul class="egr-mp-items">
+                    {{#recent}}
+                        <li class="egr-mp-recent-item">
+                            <span class="egr-mp-check" aria-hidden="true"><i class="fa fa-check"></i></span>
+                            <span><span class="egr-mp-item-name">{{name}}</span><span class="egr-mp-item-meta">{{when}}</span></span>
+                        </li>
+                    {{/recent}}
+                </ul>
+            {{/hasrecent}}
+            {{^hasrecent}}<div class="egr-mp-none">{{#str}} norecent, local_mentorship {{/str}}</div>{{/hasrecent}}
+        </section>
+    </div>
+</div>

@@ -1,0 +1,130 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_mentorship/report_course
+
+    One collapsible course block: header row, grade summary and activities table.
+
+    Context variables required for this template:
+    * id, fullname, status, badge, enrolled, hasoverdue, overdue
+    * haspct, pct, pctcomplete
+    * hasgradeitems, gradeitems [{name, score, passed}]
+    * hasactivities, activities - See the activity fields in local_mentorship\report::courses_for_template()
+
+    Example context (json):
+    {
+        "id": 2, "fullname": "Safety Assessment", "status": "inprogress",
+        "badge": {"cls": "inprogress", "icon": "fa-spinner fa-spin", "label": "In progress"},
+        "enrolled": "Sep 16, 2026", "hasoverdue": false, "overdue": 0,
+        "haspct": true, "pct": 80, "pctcomplete": false,
+        "hasgradeitems": true, "gradeitems": [{"name": "Final quiz", "score": 85, "passed": true}],
+        "hasactivities": true,
+        "activities": [{"name": "Final quiz", "sortname": "Final quiz", "url": "#", "icon": "", "modname": "Quiz",
+            "status": "completed", "badge": {"cls": "completed", "icon": "fa-check-circle", "label": "Completed"},
+            "overdue": false, "hasscore": true, "score": 85, "passed": true, "failed": false, "passfailsort": "passed",
+            "opendate": "-", "opensort": 0, "closedate": "-", "closesort": 0, "hasclose": false}]
+    }
+}}
+<div class="egr-course-block egr-course-{{status}}" {{#hasoverdue}}data-has-overdue="true"{{/hasoverdue}}>
+    <div class="egr-course-header" data-toggle-course="{{id}}" role="button" tabindex="0"
+         aria-expanded="false" aria-controls="egr-course-{{id}}">
+        <div class="egr-course-header-left">
+            <i class="fa fa-chevron-right egr-chevron" aria-hidden="true"></i>
+            <div class="egr-course-info">
+                <span class="egr-course-name">{{fullname}}</span>
+                <span class="egr-course-meta">
+                    {{#str}} report:enrolled, local_mentorship {{/str}}: {{enrolled}}
+                    {{#hasoverdue}}<span class="egr-overdue-badge">{{overdue}} {{#str}} report:overdue, local_mentorship {{/str}}</span>{{/hasoverdue}}
+                </span>
+            </div>
+        </div>
+        <div class="egr-course-header-right">
+            <div class="egr-completion-col">
+                {{#haspct}}
+                    <progress class="egr-progress {{#pctcomplete}}egr-progress-complete{{/pctcomplete}}" value="{{pct}}" max="100" aria-label="{{fullname}}">{{pct}}%</progress>
+                    <span class="egr-progress-text">{{pct}}%</span>
+                {{/haspct}}
+            </div>
+            {{#badge}}{{> local_mentorship/report_badge }}{{/badge}}
+        </div>
+    </div>
+
+    <div class="egr-activities-panel" id="egr-course-{{id}}" hidden>
+        {{#hasgradeitems}}
+            <div class="egr-grade-summary">
+                <h5 class="egr-grade-summary-title">{{#str}} report:itemandgrade, local_mentorship {{/str}}</h5>
+                <div class="egr-grade-items-list">
+                    {{#gradeitems}}
+                        <div class="egr-grade-item-row">
+                            <span>{{name}} &ndash; {{score}}</span>
+                            {{#passed}}<span class="egr-passed">{{#str}} report:passed, local_mentorship {{/str}}</span>{{/passed}}
+                            {{^passed}}<span class="egr-failed">{{#str}} report:failed, local_mentorship {{/str}}</span>{{/passed}}
+                        </div>
+                    {{/gradeitems}}
+                </div>
+            </div>
+        {{/hasgradeitems}}
+
+        {{#hasactivities}}
+            <div class="egr-table-scroll">
+                <table class="egr-activities-table" data-course-id="{{id}}">
+                    <thead>
+                        <tr>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:activity, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:type, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:completionstatus, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:grade, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:passfail, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:opendate, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                            <th class="egr-sortable-th" tabindex="0" aria-sort="none">{{#str}} report:closedate, local_mentorship {{/str}} <span class="egr-sort-indicator"><i class="fa fa-sort" aria-hidden="true"></i></span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#activities}}
+                            <tr class="egr-activity-row egr-status-{{status}} {{#overdue}}egr-row-overdue{{/overdue}}">
+                                <td class="egr-td-activity" data-sort-val="{{sortname}}">
+                                    <img src="{{icon}}" class="egr-activity-icon" alt="">
+                                    {{#url}}<a href="{{url}}" target="_blank">{{name}}</a>{{/url}}
+                                    {{^url}}{{name}}{{/url}}
+                                </td>
+                                <td data-sort-val="{{modname}}"><span class="egr-type-badge">{{modname}}</span></td>
+                                <td data-sort-val="{{status}}">{{#badge}}{{> local_mentorship/report_badge }}{{/badge}}</td>
+                                <td data-sort-val="{{score}}">
+                                    {{#hasscore}}<span class="egr-grade-value">{{score}}%</span>{{/hasscore}}
+                                    {{^hasscore}}<span class="egr-no-grade">-</span>{{/hasscore}}
+                                </td>
+                                <td data-sort-val="{{passfailsort}}">
+                                    {{#passed}}<span class="egr-passed">{{#str}} report:passed, local_mentorship {{/str}}</span>{{/passed}}
+                                    {{#failed}}<span class="egr-failed">{{#str}} report:failed, local_mentorship {{/str}}</span>{{/failed}}
+                                    {{^passfailsort}}-{{/passfailsort}}
+                                </td>
+                                <td class="egr-td-date" data-sort-val="{{opensort}}">{{opendate}}</td>
+                                <td class="egr-td-date" data-sort-val="{{closesort}}">
+                                    {{#overdue}}{{#hasclose}}<span class="egr-date-overdue"><i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{closedate}}</span>{{/hasclose}}{{/overdue}}
+                                    {{^overdue}}{{closedate}}{{/overdue}}
+                                </td>
+                            </tr>
+                        {{/activities}}
+                    </tbody>
+                </table>
+            </div>
+        {{/hasactivities}}
+        {{^hasactivities}}
+            <div class="egr-no-activities">{{#str}} report:noactivities, local_mentorship {{/str}}</div>
+        {{/hasactivities}}
+    </div>
+</div>

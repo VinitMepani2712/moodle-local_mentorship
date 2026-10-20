@@ -1,0 +1,146 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_mentorship/report_filters
+
+    Filter toolbar for the training report.
+    Zone A: search, course, sort. Zone B: status and overdue. Zone C: date ranges (toggle).
+
+    Context variables required for this template:
+    * action, id - Form target and pairing id
+    * q, courseoptions [{id, name, selected}], sortoptions [{value, label, selected}]
+    * sortdir, asc, desc - Sort direction
+    * statusoptions [{value, label, cls, icon, checked}], overdueonly
+    * enrollfrom, enrollto, closefrom, closeto, datesactive
+    * clearurl, exporturl
+
+    Example context (json):
+    {
+        "action": "#", "id": 1, "q": "",
+        "courseoptions": [{"id": 2, "name": "Safety Assessment", "selected": false}],
+        "sortoptions": [{"value": "fullname", "label": "Course name", "selected": true}],
+        "sortdir": "asc", "asc": true, "desc": false,
+        "statusoptions": [{"value": "completed", "label": "Completed", "cls": "completed", "icon": "fa-check-circle", "checked": false}],
+        "overdueonly": false,
+        "enrollfrom": "", "enrollto": "", "closefrom": "", "closeto": "", "datesactive": false,
+        "clearurl": "#", "exporturl": "#"
+    }
+}}
+<div class="egr-filters card">
+    <div class="card-body">
+        <form method="get" action="{{action}}" class="egr-filter-form" id="egr-filter-form">
+            <input type="hidden" name="id" value="{{id}}">
+            <input type="hidden" name="sortdir" id="egr-sortdir-hidden" value="{{sortdir}}">
+
+            <div class="egr-filter-zone egr-filter-zone-a">
+                <div class="egr-filter-item">
+                    <label class="egr-filter-label" for="egr-search"><i class="fa fa-search" aria-hidden="true"></i> {{#str}} search {{/str}}</label>
+                    <input type="text" id="egr-search" name="q" class="form-control" value="{{q}}"
+                           placeholder="{{#str}} report:searchactivities, local_mentorship {{/str}}">
+                </div>
+                <div class="egr-filter-item">
+                    <label class="egr-filter-label" for="egr-course-filter"><i class="fa fa-book" aria-hidden="true"></i> {{#str}} course {{/str}}</label>
+                    <select id="egr-course-filter" name="courseid" class="form-select">
+                        <option value="0">{{#str}} report:allcourses, local_mentorship {{/str}}</option>
+                        {{#courseoptions}}
+                            <option value="{{id}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                        {{/courseoptions}}
+                    </select>
+                </div>
+                <div class="egr-filter-item">
+                    <label class="egr-filter-label" for="egr-sortby"><i class="fa fa-sort" aria-hidden="true"></i> {{#str}} report:sortby, local_mentorship {{/str}}</label>
+                    <select id="egr-sortby" name="sortby" class="form-select">
+                        {{#sortoptions}}
+                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                        {{/sortoptions}}
+                    </select>
+                </div>
+                <div class="egr-filter-item egr-filter-item-narrow">
+                    <span class="egr-filter-label">&nbsp;</span>
+                    <div class="egr-sort-dir-group" role="group" aria-label="{{#str}} report:sortby, local_mentorship {{/str}}">
+                        <button type="button" data-sortdir="asc" class="btn btn-sm egr-sortdir-btn {{#asc}}active{{/asc}}"
+                                title="{{#str}} report:sortasc, local_mentorship {{/str}}" aria-label="{{#str}} report:sortasc, local_mentorship {{/str}}">
+                            <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+                        </button>
+                        <button type="button" data-sortdir="desc" class="btn btn-sm egr-sortdir-btn {{#desc}}active{{/desc}}"
+                                title="{{#str}} report:sortdesc, local_mentorship {{/str}}" aria-label="{{#str}} report:sortdesc, local_mentorship {{/str}}">
+                            <i class="fa fa-sort-alpha-desc" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="egr-filter-zone egr-filter-zone-b">
+                <div class="egr-filter-item egr-filter-item-wide">
+                    <span class="egr-filter-label"><i class="fa fa-flag" aria-hidden="true"></i> {{#str}} report:filterstatus, local_mentorship {{/str}}</span>
+                    <div class="egr-status-checkboxes">
+                        {{#statusoptions}}
+                            <label class="egr-status-chk-label egr-chk-{{cls}}">
+                                <input type="checkbox" name="statuses[]" value="{{value}}" {{#checked}}checked{{/checked}}>
+                                <i class="fa {{icon}}" aria-hidden="true"></i> {{label}}
+                            </label>
+                        {{/statusoptions}}
+                        <label class="egr-status-chk-label egr-chk-overdue">
+                            <input type="checkbox" name="overdueonly" value="1" {{#overdueonly}}checked{{/overdueonly}}>
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{#str}} report:overduecoursesonly, local_mentorship {{/str}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="egr-filter-zone egr-filter-zone-c" id="egr-date-filter-row" {{^datesactive}}hidden{{/datesactive}}>
+                <div class="egr-date-group">
+                    <span class="egr-date-group-label"><i class="fa fa-calendar" aria-hidden="true"></i> {{#str}} report:enrollfrom, local_mentorship {{/str}} &rarr; {{#str}} report:enrollto, local_mentorship {{/str}}</span>
+                    <div class="egr-date-inputs">
+                        <input type="date" name="enrollfrom" class="form-control" value="{{enrollfrom}}" aria-label="{{#str}} report:enrollfrom, local_mentorship {{/str}}">
+                        <span class="egr-date-sep" aria-hidden="true">&rarr;</span>
+                        <input type="date" name="enrollto" class="form-control" value="{{enrollto}}" aria-label="{{#str}} report:enrollto, local_mentorship {{/str}}">
+                    </div>
+                </div>
+                <div class="egr-date-group">
+                    <span class="egr-date-group-label"><i class="fa fa-calendar-times-o" aria-hidden="true"></i> {{#str}} report:closefrom, local_mentorship {{/str}} &rarr; {{#str}} report:closeto, local_mentorship {{/str}}</span>
+                    <div class="egr-date-inputs">
+                        <input type="date" name="closefrom" class="form-control" value="{{closefrom}}" aria-label="{{#str}} report:closefrom, local_mentorship {{/str}}">
+                        <span class="egr-date-sep" aria-hidden="true">&rarr;</span>
+                        <input type="date" name="closeto" class="form-control" value="{{closeto}}" aria-label="{{#str}} report:closeto, local_mentorship {{/str}}">
+                    </div>
+                </div>
+            </div>
+
+            <div class="egr-filter-footer">
+                <div class="egr-footer-left">
+                    <button type="submit" class="btn btn-primary egr-btn-apply"><i class="fa fa-filter" aria-hidden="true"></i> {{#str}} report:apply, local_mentorship {{/str}}</button>
+                    <a href="{{clearurl}}" class="btn btn-outline-secondary egr-btn-clear">{{#str}} report:clear, local_mentorship {{/str}}</a>
+                </div>
+                <div class="egr-footer-right">
+                    <button type="button" id="egr-toggle-dates" class="btn btn-sm btn-outline-info egr-footer-btn {{#datesactive}}active{{/datesactive}}"
+                            aria-controls="egr-date-filter-row" aria-expanded="{{#datesactive}}true{{/datesactive}}{{^datesactive}}false{{/datesactive}}">
+                        <i class="fa fa-calendar" aria-hidden="true"></i> {{#str}} report:datefilters, local_mentorship {{/str}}
+                    </button>
+                    <button type="button" id="egr-expand-all" class="btn btn-sm btn-outline-secondary egr-footer-btn"
+                            data-expand-label="{{#str}} report:expandall, local_mentorship {{/str}}"
+                            data-collapse-label="{{#str}} report:collapseall, local_mentorship {{/str}}">
+                        <i class="fa fa-expand" aria-hidden="true"></i> <span>{{#str}} report:expandall, local_mentorship {{/str}}</span>
+                    </button>
+                    <a href="{{exporturl}}" class="btn btn-sm btn-outline-success egr-footer-btn">
+                        <i class="fa fa-download" aria-hidden="true"></i> {{#str}} report:exportcsv, local_mentorship {{/str}}
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,149 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_mentorship/manage
+
+    Admin page: assign mentees to a mentor, change mentors, end pairings.
+
+    Context variables required for this template:
+    * stats - [{cls, icon, value, label}]
+    * changemode - True when changing one pairing's mentor
+    * change - {menteename, menteepicture, mentorname, mentorpicture, formhtml} (change mode)
+    * formhtml - Assign form (normal mode)
+    * hasrows, rows - [{mentor, mentee: {name, picture, both}, assigned, active, status, viewurl, changeurl, endid}]
+    * manageurl, sesskey - For the End buttons
+    * hasended, showended, toggleendedurl, toggleendedlabel - Ended pairings toggle
+
+    Example context (json):
+    {
+        "stats": [{"cls": "stat-total", "icon": "fa-link", "value": 3, "label": "Active pairings"}],
+        "changemode": false, "formhtml": "<form></form>",
+        "hasrows": true,
+        "rows": [{"mentor": {"name": "Leslie Huang", "picture": "", "both": false},
+            "mentee": {"name": "Vinit Patel", "picture": "", "both": true},
+            "assigned": "20 October 2026", "active": true, "status": "Active",
+            "viewurl": "#", "changeurl": "#", "endid": 1}],
+        "manageurl": "#", "sesskey": "abc",
+        "hasended": true, "showended": false, "toggleendedurl": "#", "toggleendedlabel": "Show ended pairings (2)"
+    }
+}}
+<div id="egr-wrapper">
+    <div class="egr-user-header">
+        <div class="egr-banner-icon"><i class="fa fa-sitemap" aria-hidden="true"></i></div>
+        <div class="egr-user-info">
+            <h2 class="egr-user-name">{{#str}} managepairings, local_mentorship {{/str}}</h2>
+            <div class="egr-user-meta"><span>{{#str}} intro:manage, local_mentorship {{/str}}</span></div>
+        </div>
+    </div>
+
+    <div class="egr-stats-row egr-stats-row-4">
+        {{#stats}}
+            <div class="egr-stat-card {{cls}}">
+                <div class="egr-stat-icon"><i class="fa {{icon}}" aria-hidden="true"></i></div>
+                <div class="egr-stat-value">{{value}}</div>
+                <div class="egr-stat-label">{{label}}</div>
+            </div>
+        {{/stats}}
+    </div>
+
+    {{#changemode}}
+        {{#change}}
+            <section class="egr-card">
+                <h3 class="egr-card-title"><i class="fa fa-exchange" aria-hidden="true"></i> {{#str}} changementor, local_mentorship {{/str}}</h3>
+                <div class="egr-change-summary">
+                    <div class="egr-pair-user">{{{menteepicture}}}<span><span class="egr-pair-label">{{#str}} mentee, local_mentorship {{/str}}</span>{{menteename}}</span></div>
+                    <div class="egr-pair-user">{{{mentorpicture}}}<span><span class="egr-pair-label">{{#str}} currentmentor, local_mentorship {{/str}}</span>{{mentorname}}</span></div>
+                </div>
+                <div class="egr-note"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{#str}} changementor:info, local_mentorship {{/str}}</span></div>
+                {{{formhtml}}}
+            </section>
+        {{/change}}
+    {{/changemode}}
+
+    {{^changemode}}
+        <section class="egr-card">
+            <h3 class="egr-card-title"><i class="fa fa-user-plus" aria-hidden="true"></i> {{#str}} assignmentees, local_mentorship {{/str}}</h3>
+            <div class="egr-note"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{#str}} rules:manage, local_mentorship {{/str}}</span></div>
+            {{{formhtml}}}
+        </section>
+
+        <section class="egr-card egr-card-flush">
+            <div class="egr-card-head">
+                <h3 class="egr-card-title"><i class="fa fa-list" aria-hidden="true"></i> {{#str}} allpairings, local_mentorship {{/str}}</h3>
+                {{#hasended}}
+                    <a class="btn btn-sm btn-outline-secondary egr-footer-btn" href="{{toggleendedurl}}">{{toggleendedlabel}}</a>
+                {{/hasended}}
+            </div>
+            {{#hasrows}}
+                <div class="egr-table-scroll">
+                    <table class="egr-activities-table egr-pairings-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{#str}} mentor, local_mentorship {{/str}}</th>
+                                <th scope="col">{{#str}} mentee, local_mentorship {{/str}}</th>
+                                <th scope="col">{{#str}} assigned, local_mentorship {{/str}}</th>
+                                <th scope="col">{{#str}} status, local_mentorship {{/str}}</th>
+                                <th scope="col">{{#str}} actions, local_mentorship {{/str}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#rows}}
+                                <tr class="{{^active}}egr-row-ended{{/active}}">
+                                    <td>
+                                        {{#mentor}}
+                                            <div class="egr-pair-user">{{{picture}}}<span>{{name}}</span>
+                                                {{#both}}<span class="egr-chip-both">{{#str}} bothroles, local_mentorship {{/str}}</span>{{/both}}
+                                            </div>
+                                        {{/mentor}}
+                                    </td>
+                                    <td>
+                                        {{#mentee}}
+                                            <div class="egr-pair-user">{{{picture}}}<span>{{name}}</span>
+                                                {{#both}}<span class="egr-chip-both">{{#str}} bothroles, local_mentorship {{/str}}</span>{{/both}}
+                                            </div>
+                                        {{/mentee}}
+                                    </td>
+                                    <td class="egr-td-date">{{assigned}}</td>
+                                    <td>
+                                        {{#active}}<span class="egr-badge egr-badge-completed"><i class="fa fa-check-circle" aria-hidden="true"></i> {{status}}</span>{{/active}}
+                                        {{^active}}<span class="egr-badge egr-badge-nottracked"><i class="fa fa-minus-circle" aria-hidden="true"></i> {{status}}</span>{{/active}}
+                                    </td>
+                                    <td>
+                                        <div class="egr-row-actions">
+                                            <a class="btn btn-sm btn-outline-primary" href="{{viewurl}}"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{#str}} viewreport, local_mentorship {{/str}}</a>
+                                            {{#active}}
+                                                <a class="btn btn-sm btn-outline-secondary" href="{{changeurl}}"><i class="fa fa-exchange" aria-hidden="true"></i> {{#str}} changementor, local_mentorship {{/str}}</a>
+                                                <form method="post" action="{{manageurl}}">
+                                                    <input type="hidden" name="end" value="{{endid}}">
+                                                    <input type="hidden" name="sesskey" value="{{sesskey}}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa fa-times" aria-hidden="true"></i> {{#str}} end, local_mentorship {{/str}}</button>
+                                                </form>
+                                            {{/active}}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{/rows}}
+                        </tbody>
+                    </table>
+                </div>
+            {{/hasrows}}
+            {{^hasrows}}
+                <div class="egr-no-activities">{{#str}} nopairings, local_mentorship {{/str}}</div>
+            {{/hasrows}}
+        </section>
+    {{/changemode}}
+</div>

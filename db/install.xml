@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/mentorship/db" VERSION="20261020" COMMENT="XMLDB file for Moodle local/mentorship"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_mentorship_pairing" COMMENT="Direct mentor to mentee pairings. A user may be a mentor and a mentee at the same time.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="mentorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who mentors"/>
+        <FIELD NAME="menteeid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="User who is mentored"/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 means no end date"/>
+        <FIELD NAME="status" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0 active, 1 ended"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="mentorid" TYPE="foreign" FIELDS="mentorid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="menteeid" TYPE="foreign" FIELDS="menteeid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="mentor_mentee" UNIQUE="false" FIELDS="mentorid, menteeid"/>
+        <INDEX NAME="status" UNIQUE="false" FIELDS="status"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

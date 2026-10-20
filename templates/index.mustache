@@ -1,0 +1,153 @@
+{{!
+    This file is part of Moodle - https://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_mentorship/index
+
+    My mentorship: mentor card and mentee list on the left, selected mentee summary on the right.
+
+    Context variables required for this template:
+    * name, picture, totals {mentees} - Header
+    * hasmentors, mentors [{name, picture, reporturl, messageurl, messagelabel}]
+    * hasmentees, action, q, sortoptions [{value, label, selected}], shown - Mentee search and sort
+    * list [{name, sortname, picture, pct, state, statelabel, url, active, hidden}], emptylist
+    * hassel, sel - See local_mentorship/index_summary
+    * none - No pairing at all
+
+    Example context (json):
+    {
+        "name": "Vinit Mepani", "picture": "", "totals": {"mentees": 2},
+        "hasmentors": true,
+        "mentors": [{"name": "Leslie Huang", "picture": "", "reporturl": "#", "messageurl": "#", "messagelabel": "Message Leslie Huang"}],
+        "hasmentees": true, "action": "#", "q": "", "shown": "2",
+        "sortoptions": [{"value": "name", "label": "Name (A to Z)", "selected": true}],
+        "list": [{"name": "test user", "sortname": "test user", "picture": "", "pct": 40, "state": "ontrack",
+            "statelabel": "In progress", "url": "#", "active": true}],
+        "emptylist": false, "hassel": false, "sel": null, "none": false
+    }
+}}
+<div id="egr-wrapper" class="egr-mp">
+    <section class="egr-mp-banner">
+        {{{picture}}}
+        <div class="egr-mp-banner-title">
+            <div class="egr-mp-eyebrow">{{#str}} welcomeback, local_mentorship {{/str}}</div>
+            <h2 class="egr-mp-heading">{{name}}</h2>
+        </div>
+        {{#hasmentees}}
+            <div class="egr-mp-counters">
+                {{#totals}}
+                    <div class="egr-mp-counter">
+                        <span class="egr-mp-counter-value">{{mentees}}</span>
+                        <span class="egr-mp-counter-label">{{#str}} mentees, local_mentorship {{/str}}</span>
+                    </div>
+                {{/totals}}
+            </div>
+        {{/hasmentees}}
+    </section>
+
+    {{#none}}
+        <div class="egr-empty">
+            <div class="egr-empty-icon"><i class="fa fa-users" aria-hidden="true"></i></div>
+            <h3 class="egr-empty-title">{{#str}} empty:title, local_mentorship {{/str}}</h3>
+            <p class="egr-empty-text">{{#str}} empty:text, local_mentorship {{/str}}</p>
+        </div>
+    {{/none}}
+
+    {{^none}}
+        <div class="egr-mp-layout">
+            <aside class="egr-mp-side">
+                {{#mentors}}
+                    <section class="egr-mp-panel egr-mp-mentor">
+                        <div class="egr-mp-panel-label">{{#str}} yourmentor, local_mentorship {{/str}}</div>
+                        <div class="egr-mp-mentor-who">
+                            <span class="egr-mp-mentor-ring">{{{picture}}}</span>
+                            <span class="egr-mp-mentor-name">{{name}}</span>
+                        </div>
+                        <div class="egr-mp-mentor-actions">
+                            <a class="btn egr-mp-btn-soft" href="{{reporturl}}"><i class="fa fa-bar-chart" aria-hidden="true"></i> {{#str}} mytrainingreport, local_mentorship {{/str}}</a>
+                            <a class="btn egr-mp-btn-icon" href="{{messageurl}}" aria-label="{{messagelabel}}" title="{{messagelabel}}"><i class="fa fa-comment" aria-hidden="true"></i></a>
+                        </div>
+                    </section>
+                {{/mentors}}
+
+                {{#hasmentees}}
+                    <section class="egr-mp-panel egr-mp-list" data-region="local-mentorship-mentees"
+                             data-countpattern="{{#str}} menteecount, local_mentorship {{/str}}" data-total="{{totals.mentees}}">
+                        <div class="egr-mp-list-head">
+                            <h3 class="egr-mp-panel-label">{{#str}} mymentees, local_mentorship {{/str}}</h3>
+                            <span class="egr-mp-count" data-region="count" aria-live="polite">{{shown}}</span>
+                        </div>
+                        {{! Without JavaScript the form submits search and sort to the server.
+                            local_mentorship/mentees applies both instantly in the browser. }}
+                        <form method="get" action="{{action}}" class="egr-mp-tools" role="search" data-region="search-form">
+                            <div class="egr-mp-search">
+                                <label for="egr-mp-q" class="egr-sr-only">{{#str}} searchmentees, local_mentorship {{/str}}</label>
+                                <i class="fa fa-search egr-mp-search-icon" aria-hidden="true"></i>
+                                <input id="egr-mp-q" type="search" name="q" value="{{q}}" autocomplete="off" data-region="search"
+                                       placeholder="{{#str}} searchmentees, local_mentorship {{/str}}">
+                                <button type="button" class="egr-mp-search-clear" data-action="clear" {{^q}}hidden{{/q}}
+                                        aria-label="{{#str}} clearsearch, local_mentorship {{/str}}" title="{{#str}} clearsearch, local_mentorship {{/str}}">
+                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="egr-mp-sort">
+                                <label for="egr-mp-sort" class="egr-sr-only">{{#str}} sortmentees, local_mentorship {{/str}}</label>
+                                <i class="fa fa-sort-amount-asc egr-mp-sort-icon" aria-hidden="true"></i>
+                                <select id="egr-mp-sort" name="sort" data-region="sort">
+                                    {{#sortoptions}}
+                                        <option value="{{value}}" {{#selected}}selected{{/selected}}>{{label}}</option>
+                                    {{/sortoptions}}
+                                </select>
+                            </div>
+                        </form>
+                        <ul class="egr-mp-people" data-region="list">
+                            {{#list}}
+                                <li data-name="{{sortname}}" data-pct="{{pct}}" {{#hidden}}hidden{{/hidden}}>
+                                    <a href="{{url}}" class="egr-mp-person egr-mp-state-{{state}} {{#active}}egr-mp-person-active{{/active}}" {{#active}}aria-current="true"{{/active}}>
+                                        <span class="egr-mp-ring egr-mp-ring-sm">
+                                            <svg viewBox="0 0 36 36" aria-hidden="true" focusable="false">
+                                                <circle class="egr-mp-ring-track" cx="18" cy="18" r="16"></circle>
+                                                {{#pct}}<circle class="egr-mp-ring-value" cx="18" cy="18" r="16" pathLength="100" stroke-dasharray="{{pct}} 100"></circle>{{/pct}}
+                                            </svg>
+                                            {{{picture}}}
+                                        </span>
+                                        <span class="egr-mp-person-text">
+                                            <span class="egr-mp-person-name">{{name}}</span>
+                                            <span class="egr-mp-person-state"><span class="egr-mp-dot" aria-hidden="true"></span>{{statelabel}}</span>
+                                        </span>
+                                        <span class="egr-mp-person-pct">{{pct}}%</span>
+                                    </a>
+                                </li>
+                            {{/list}}
+                        </ul>
+                        <div class="egr-mp-none" data-region="nomatch" {{^emptylist}}hidden{{/emptylist}}>{{#str}} nomenteessearch, local_mentorship {{/str}}</div>
+                    </section>
+                {{/hasmentees}}
+            </aside>
+
+            <div class="egr-mp-main">
+                {{#hassel}}{{#sel}}{{> local_mentorship/index_summary }}{{/sel}}{{/hassel}}
+                {{^hasmentees}}
+                    <div class="egr-empty">
+                        <div class="egr-empty-icon"><i class="fa fa-bar-chart" aria-hidden="true"></i></div>
+                        <h3 class="egr-empty-title">{{#str}} menteeonly:title, local_mentorship {{/str}}</h3>
+                        <p class="egr-empty-text">{{#str}} menteeonly:text, local_mentorship {{/str}}</p>
+                    </div>
+                {{/hasmentees}}
+            </div>
+        </div>
+    {{/none}}
+</div>
