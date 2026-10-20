@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_mentorship';
-$plugin->version   = 2026102101; // 1.0.1 fixes double-escaped course and activity names.
+$plugin->version   = 2026102100;
 $plugin->requires  = 2022112800; // Moodle 4.1 LTS.
 $plugin->supported = [401, 503];  // Moodle 4.1 to 5.3.
 $plugin->maturity  = MATURITY_STABLE;
