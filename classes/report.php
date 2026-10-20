@@ -21,16 +21,15 @@ use stdClass;
 /**
  * Mentee training report: courses, activities, completion, grades and pass/fail.
  *
- * // Ported from local_staticpage gradereport_lib.php / gradereport.php. Same SQL, same
- * // 70% pass rule, same 2021-07-01 course cutoff and CANCELLED exclusions, so numbers
- * // match the existing grade report exactly.
+ * //VM: Ported from local_staticpage gradereport_lib.php / gradereport.php. Same SQL, same
+ * //VM: 70% pass rule, same 2021-07-01 course cutoff and CANCELLED exclusions, so numbers
+ * //VM: match the existing grade report exactly.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report {
-
     /** @var float Pass threshold, matches the original report's >= 70.0 rule. */
     const PASS_SCORE = 70.0;
 
@@ -140,8 +139,8 @@ class report {
     /**
      * Visible activities in a course with completion status, dates and grade for a user.
      *
-     * // Reads course_modules_completion first so manual completions show immediately,
-     * // then the completion API, then close-date logic (same as the original report).
+     * //VM: Reads course_modules_completion first so manual completions show immediately,
+     * //VM: then the completion API, then close-date logic (same as the original report).
      *
      * @param int $courseid
      * @param int $userid
@@ -192,8 +191,12 @@ class report {
 
             $activity->completionstatus = 'nottracked';
             if ($completion->is_enabled($cm)) {
-                $data = $DB->get_record('course_modules_completion',
-                    ['coursemoduleid' => $cm->id, 'userid' => $userid], 'completionstate, timemodified', IGNORE_MISSING);
+                $data = $DB->get_record(
+                    'course_modules_completion',
+                    ['coursemoduleid' => $cm->id, 'userid' => $userid],
+                    'completionstate, timemodified',
+                    IGNORE_MISSING
+                );
                 if (!$data) {
                     $data = $completion->get_data($cm, true, $userid);
                 }
@@ -218,13 +221,17 @@ class report {
             $activity->grademax = null;
             $activity->score = null;
             $activity->passfail = '';
-            $gradeitem = $DB->get_record('grade_items',
-                ['courseid' => $courseid, 'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance]);
+            $gradeitem = $DB->get_record(
+                'grade_items',
+                ['courseid' => $courseid, 'itemmodule' => $cm->modname, 'iteminstance' => $cm->instance]
+            );
             if ($gradeitem) {
                 $activity->grademax = $gradeitem->grademax;
                 $grade = $DB->get_record('grade_grades', ['itemid' => $gradeitem->id, 'userid' => $userid]);
-                if ($grade && $grade->finalgrade !== null && $grade->finalgrade !== ''
-                        && $gradeitem->grademax !== null && $gradeitem->grademax > 0) {
+                if (
+                    $grade && $grade->finalgrade !== null && $grade->finalgrade !== ''
+                        && $gradeitem->grademax !== null && $gradeitem->grademax > 0
+                ) {
                     $activity->score = round($grade->finalgrade / $gradeitem->grademax * 100, 1);
                     $activity->passfail = self::passfail($activity->score);
                 }
@@ -260,8 +267,12 @@ class report {
                 continue;
             }
             $total++;
-            $record = $DB->get_record('course_modules_completion',
-                ['coursemoduleid' => $cm->id, 'userid' => $userid], 'completionstate', IGNORE_MISSING);
+            $record = $DB->get_record(
+                'course_modules_completion',
+                ['coursemoduleid' => $cm->id, 'userid' => $userid],
+                'completionstate',
+                IGNORE_MISSING
+            );
             if ($record && in_array((int) $record->completionstate, $done, true)) {
                 $completed++;
             } else if (in_array((int) $completion->get_data($cm, false, $userid)->completionstate, $done, true)) {
@@ -388,7 +399,7 @@ class report {
      */
     public static function sort_courses(array $courses, string $sortby, string $sortdir): array {
         $order = ['failed' => 1, 'inprogress' => 2, 'notyetattempted' => 3, 'completed' => 4];
-        usort($courses, function($a, $b) use ($sortby, $order) {
+        usort($courses, function ($a, $b) use ($sortby, $order) {
             switch ($sortby) {
                 case 'enrollmentdate':
                     return $a->enrollmentdate <=> $b->enrollmentdate;

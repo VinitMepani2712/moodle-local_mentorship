@@ -26,11 +26,10 @@ use local_mentorship\pairing;
  * Admin form to assign one mentor to one or more mentees.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class pairing_form extends \moodleform {
-
     /**
      * Core user search options (same selector core uses in Report builder audiences).
      *
@@ -41,7 +40,7 @@ class pairing_form extends \moodleform {
         return [
             'ajax' => 'core_user/form_user_selector',
             'multiple' => $multiple,
-            'valuehtmlcallback' => function($userid) {
+            'valuehtmlcallback' => function ($userid) {
                 $user = \core_user::get_user($userid);
                 return $user ? fullname($user) : '';
             },
@@ -54,14 +53,24 @@ class pairing_form extends \moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('autocomplete', 'mentorid', get_string('mentor', 'local_mentorship'), [],
-            self::user_selector_options(false));
+        $mform->addElement(
+            'autocomplete',
+            'mentorid',
+            get_string('mentor', 'local_mentorship'),
+            [],
+            self::user_selector_options(false)
+        );
         $mform->setType('mentorid', PARAM_INT);
         $mform->addRule('mentorid', null, 'required', null, 'client');
 
-        // Several mentees can be paired with the same mentor in one go.
-        $mform->addElement('autocomplete', 'menteeids', get_string('mentees', 'local_mentorship'), [],
-            self::user_selector_options(true));
+        // VM: Several mentees can be paired with the same mentor in one go.
+        $mform->addElement(
+            'autocomplete',
+            'menteeids',
+            get_string('mentees', 'local_mentorship'),
+            [],
+            self::user_selector_options(true)
+        );
         $mform->setType('menteeids', PARAM_INT);
         $mform->addRule('menteeids', null, 'required', null, 'client');
         $mform->addHelpButton('menteeids', 'menteeids', 'local_mentorship');

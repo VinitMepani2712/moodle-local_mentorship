@@ -16,10 +16,10 @@
 /**
  * Training report interactions: mentee selector, expand/collapse, sorting and filter toggles.
  *
- * // Replaces the inline <script> from local_staticpage/gradereport.php.
+ * //VM: Replaces the inline <script> from local_staticpage/gradereport.php.
  *
  * @module     local_mentorship/report
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

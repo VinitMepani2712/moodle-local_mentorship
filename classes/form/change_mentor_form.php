@@ -28,11 +28,10 @@ use local_mentorship\pairing;
  * Custom data: 'pairing' (the active pairing record).
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class change_mentor_form extends \moodleform {
-
     /**
      * Form definition.
      */
@@ -42,8 +41,13 @@ class change_mentor_form extends \moodleform {
         $mform->addElement('hidden', 'change', $this->_customdata['pairing']->id);
         $mform->setType('change', PARAM_INT);
 
-        $mform->addElement('autocomplete', 'mentorid', get_string('newmentor', 'local_mentorship'), [],
-            pairing_form::user_selector_options(false));
+        $mform->addElement(
+            'autocomplete',
+            'mentorid',
+            get_string('newmentor', 'local_mentorship'),
+            [],
+            pairing_form::user_selector_options(false)
+        );
         $mform->setType('mentorid', PARAM_INT);
         $mform->addRule('mentorid', null, 'required', null, 'client');
 

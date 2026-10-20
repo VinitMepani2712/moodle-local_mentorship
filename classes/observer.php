@@ -20,11 +20,10 @@ namespace local_mentorship;
  * Event observer for local_mentorship.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observer {
-
     /**
      * Remove pairings of a deleted user.
      *

@@ -18,7 +18,7 @@
  * Assign mentees to mentors, change mentors and end pairings.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -29,7 +29,7 @@ use core\output\notification;
 use local_mentorship\pairing;
 
 admin_externalpage_setup('local_mentorship_manage');
-// Same design file as the training report and My mentorship.
+// VM: Same design file as the training report and My mentorship.
 $PAGE->requires->css('/local/mentorship/styles/report.css');
 
 $endid = optional_param('end', 0, PARAM_INT);
@@ -46,7 +46,7 @@ $userfields = implode(', ', array_unique(array_merge(['id'], \core_user\fields::
 $template = ['changemode' => false];
 
 if ($changeid) {
-    // Change mentor: end the current pairing (kept as history) and start a new one.
+    // VM: Change mentor: end the current pairing (kept as history) and start a new one.
     $pairing = $DB->get_record(pairing::TABLE, ['id' => $changeid], '*', MUST_EXIST);
     if (!pairing::is_active($pairing)) {
         redirect($PAGE->url, get_string('error:notactive', 'local_mentorship'), null, notification::NOTIFY_ERROR);
@@ -72,7 +72,7 @@ if ($changeid) {
 } else {
     $form = new \local_mentorship\form\pairing_form();
     if ($data = $form->get_data()) {
-        // One transaction, so a mentee refused at the last second rolls back the whole batch.
+        // VM: One transaction, so a mentee refused at the last second rolls back the whole batch.
         $count = 0;
         $transaction = $DB->start_delegated_transaction();
         foreach (array_unique(array_map('intval', (array) $data->menteeids)) as $menteeid) {
@@ -80,14 +80,18 @@ if ($changeid) {
             $count++;
         }
         $transaction->allow_commit();
-        redirect($PAGE->url, get_string('pairingscreated', 'local_mentorship', $count), null,
-            notification::NOTIFY_SUCCESS);
+        redirect(
+            $PAGE->url,
+            get_string('pairingscreated', 'local_mentorship', $count),
+            null,
+            notification::NOTIFY_SUCCESS
+        );
     }
     $template['formhtml'] = $form->render();
 }
 
-// Pairings involving a suspended or deleted user are left out of the table and the counts.
-// No paging yet; add paging if pairings grow past a few hundred.
+// VM: Pairings involving a suspended or deleted user are left out of the table and the counts.
+// VM: No paging yet; add paging if pairings grow past a few hundred.
 $pairings = $DB->get_records_sql(
     "SELECT p.*
        FROM {" . pairing::TABLE . "} p
@@ -110,11 +114,11 @@ foreach ($pairings as $p) {
         $endedcount++;
     }
 }
-// Users holding both relationships right now (middle of a chain).
+// VM: Users holding both relationships right now (middle of a chain).
 $bothroles = array_intersect_key($activementors, $activementees);
 $users = $userids ? $DB->get_records_list('user', 'id', $userids, '', $userfields) : [];
 
-$person = function(int $userid) use ($users, $bothroles, $OUTPUT): array {
+$person = function (int $userid) use ($users, $bothroles, $OUTPUT): array {
     $user = $users[$userid] ?? null;
     return [
         'name' => $user ? fullname($user) : '-',

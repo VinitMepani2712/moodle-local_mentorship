@@ -18,7 +18,7 @@
  * Library callbacks for local_mentorship.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -27,8 +27,8 @@ use local_mentorship\pairing;
 /**
  * Add "My mentorship" to the user's own profile page.
  *
- * // Works on every supported Moodle version. On Moodle 4.1 and 4.2, which have no
- * // primary navigation hook, this is the menu entry point for mentors; mentees get it too.
+ * //VM: Works on every supported Moodle version. On Moodle 4.1 and 4.2, which have no
+ * //VM: primary navigation hook, this is the menu entry point for mentors; mentees get it too.
  *
  * @param \core_user\output\myprofile\tree $tree
  * @param stdClass $user Profile owner.

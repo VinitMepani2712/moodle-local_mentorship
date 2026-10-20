@@ -17,11 +17,11 @@
 /**
  * My mentorship: split view of the user's mentees with a summary of the selected one.
  *
- * // Layout "Option B+" from the design canvas. Selection and search are plain
- * // query parameters, so the page needs no JavaScript.
+ * //VM: Layout "Option B+" from the design canvas. Selection and search are plain
+ * //VM: query parameters, so the page needs no JavaScript.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -44,9 +44,9 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('mymentorship', 'local_mentorship'));
 $PAGE->set_heading(get_string('mymentorship', 'local_mentorship'));
 $PAGE->set_primary_active_tab('local_mentorship');
-// Same design file as the training report and the admin page.
+// VM: Same design file as the training report and the admin page.
 $PAGE->requires->css('/local/mentorship/styles/report.css');
-// Live search, clear and sort for the mentee list; the page still works without it.
+// VM: Live search, clear and sort for the mentee list; the page still works without it.
 $PAGE->requires->js_call_amd('local_mentorship/mentees', 'init');
 
 $nofilters = ['courseid' => 0, 'q' => '', 'statuses' => [], 'overdueonly' => false, 'sortby' => 'fullname',
@@ -84,8 +84,8 @@ function local_mentorship_index_summary(int $userid, array $nofilters): array {
 $mentors = pairing::get_mentors((int) $USER->id);
 $mentees = pairing::get_mentees((int) $USER->id);
 
-// One report per mentee for the list states. Fine for a handful of mentees per
-// mentor; cache the per-mentee summary if mentors get dozens.
+// VM: One report per mentee for the list states. Fine for a handful of mentees per
+// VM: mentor; cache the per-mentee summary if mentors get dozens.
 $summaries = [];
 foreach ($mentees as $pairingid => $user) {
     $summaries[$pairingid] = local_mentorship_index_summary((int) $user->id, $nofilters);
@@ -112,7 +112,7 @@ foreach ($mentees as $pairingid => $user) {
         'hidden' => !$match,
     ];
 }
-uasort($list, function($a, $b) use ($sort) {
+uasort($list, function ($a, $b) use ($sort) {
     if ($sort !== 'name' && $a['pct'] !== $b['pct']) {
         return $sort === 'progressasc' ? $a['pct'] <=> $b['pct'] : $b['pct'] <=> $a['pct'];
     }
@@ -150,13 +150,20 @@ if ($selectedid && isset($mentees[$selectedid])) {
             'badge' => report::badge($course->status)];
         foreach ($course->activities as $a) {
             if ($a->completionstatus === 'overdue') {
-                $overdue[] = ['name' => format_string($a->name, true, ['context' => $context, 'escape' => false]), 'course' => $coursename,
-                    'due' => get_string('due', 'local_mentorship', userdate($a->closedate, get_string('strftimedate', 'langconfig'))),
-                    'sort' => $a->closedate];
+                $due = userdate($a->closedate, get_string('strftimedate', 'langconfig'));
+                $overdue[] = [
+                    'name' => format_string($a->name, true, ['context' => $context, 'escape' => false]),
+                    'course' => $coursename,
+                    'due' => get_string('due', 'local_mentorship', $due),
+                    'sort' => $a->closedate,
+                ];
             } else if ($a->completionstatus === 'completed' && !empty($a->completiondate)) {
                 $recent[] = ['name' => format_string($a->name, true, ['context' => $context, 'escape' => false]),
-                    'when' => get_string('completedon', 'local_mentorship',
-                        userdate($a->completiondate, get_string('strftimedate', 'langconfig'))),
+                    'when' => get_string(
+                        'completedon',
+                        'local_mentorship',
+                        userdate($a->completiondate, get_string('strftimedate', 'langconfig'))
+                    ),
                     'sort' => $a->completiondate];
             }
         }
@@ -170,8 +177,11 @@ if ($selectedid && isset($mentees[$selectedid])) {
         'pct' => $sum['pct'],
         'state' => $sum['state'],
         'stateshort' => get_string('state:' . $sum['state'] . ':short', 'local_mentorship'),
-        'summary' => get_string($s['overdue'] ? 'summary:overdue' : 'summary', 'local_mentorship',
-            (object) ['done' => $s['completed'], 'total' => $s['total'], 'overdue' => $s['overdue']]),
+        'summary' => get_string(
+            $s['overdue'] ? 'summary:overdue' : 'summary',
+            'local_mentorship',
+            (object) ['done' => $s['completed'], 'total' => $s['total'], 'overdue' => $s['overdue']]
+        ),
         'reporturl' => (new moodle_url('/local/mentorship/view.php', ['id' => $selectedid]))->out(false),
         'messageurl' => (new moodle_url('/message/index.php', ['id' => $user->id]))->out(false),
         'messagelabel' => get_string('messageuser', 'local_mentorship', fullname($user)),

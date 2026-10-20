@@ -1,12 +1,34 @@
-/* ============================================================
+/**
+ * This file is part of Moodle - https://moodle.org/
+ *
+ * Moodle is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Moodle is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * @package    local_mentorship
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-    Ported from local_staticpage/styles/gradereport.css. Shared design file
-    for view.php, index.php and manage.php, loaded via $PAGE->requires->css().
-    Fonts are bundled in styles/fonts (SIL OFL 1.1, see thirdpartylibs.xml),
-    so the plugin makes no requests to external servers.
-    Changes from the original: <progress> replaces the inline-width bar,
-    [hidden] panels, header meta/actions, back link, table scroll box,
-    and the unused .btn-outline-overdue block removed.
+/* ============================================================
+   Mentee Training Report — local_mentorship (DCF-OTPD)
+
+   VM: Ported from local_staticpage/styles/gradereport.css. Shared design file
+   VM: for view.php, index.php and manage.php, loaded via $PAGE->requires->css().
+   VM: Fonts are bundled in styles/fonts (SIL OFL 1.1, see thirdpartylibs.xml),
+   VM: so the plugin makes no requests to external servers.
+   VM: Changes from the original: <progress> replaces the inline-width bar,
+   VM: [hidden] panels, header meta/actions, back link, table scroll box,
+   VM: and the unused .btn-outline-overdue block removed.
    ============================================================ */
 
 /* ============================================================
@@ -142,12 +164,12 @@
   box-sizing: border-box;
 }
 
-/*  Panels and the date row are toggled with the hidden attribute. */
+/* VM: Panels and the date row are toggled with the hidden attribute. */
 #egr-wrapper [hidden] {
   display: none !important;
 }
 
-/*  Back link above the report. */
+/* VM: Back link above the report. */
 #egr-wrapper .egr-back {
   display: inline-flex;
   align-items: center;
@@ -269,7 +291,7 @@
   letter-spacing: -0.01em;
 }
 
-/*  Pairing details under the name, and the action buttons. */
+/* VM: Pairing details under the name, and the action buttons. */
 #egr-wrapper .egr-user-meta {
   display: flex;
   flex-wrap: wrap;
@@ -1031,7 +1053,7 @@
   min-width: 130px;
 }
 
-/*  Native <progress> replaces the div bar with an inline width. */
+/* VM: Native <progress> replaces the div bar with an inline width. */
 #egr-wrapper .egr-progress {
   flex: 1;
   min-width: 80px;
@@ -1193,7 +1215,7 @@
 /* ============================================================
    14 - ACTIVITIES TABLE
    ============================================================ */
-/*  Wide activity tables scroll inside their panel instead of the page. */
+/* VM: Wide activity tables scroll inside their panel instead of the page. */
 #egr-wrapper .egr-table-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -1378,7 +1400,7 @@
 
 
 /* ============================================================
-   14b - MY MENTORSHIP PAGE ( index.php)
+   14b - MY MENTORSHIP PAGE (VM: index.php)
    ============================================================ */
 /* Layout */
 #egr-wrapper.egr-mp {
@@ -1522,7 +1544,7 @@
   flex: none;
 }
 
-/*  Avatars are sized by their container so a photo (img) and Moodle's
+/* VM: Avatars are sized by their container so a photo (img) and Moodle's
    initials (span.userinitials) look the same. */
 #egr-wrapper .egr-mp-banner > .userpicture,
 #egr-wrapper .egr-mp-banner > .userinitials {
@@ -1637,7 +1659,7 @@
   font-weight: 700;
 }
 
-/*  Search with clear button, and sort dropdown. */
+/* VM: Search with clear button, and sort dropdown. */
 #egr-wrapper .egr-mp-tools {
   display: flex;
   flex-direction: column;
@@ -1721,7 +1743,7 @@
   outline: none;
 }
 
-/*  Visually hidden but read by screen readers (works with Bootstrap 4 and 5). */
+/* VM: Visually hidden but read by screen readers (works with Bootstrap 4 and 5). */
 #egr-wrapper .egr-sr-only {
   position: absolute;
   width: 1px;
@@ -1734,7 +1756,7 @@
   border: 0;
 }
 
-/*  The list scrolls once it is taller than about seven mentees. */
+/* VM: The list scrolls once it is taller than about seven mentees. */
 #egr-wrapper .egr-mp-people {
   list-style: none;
   margin: 0;
@@ -2122,7 +2144,7 @@
   font-size: 14px;
 }
 
-/*  Bar colour follows the course status. */
+/* VM: Bar colour follows the course status. */
 #egr-wrapper .egr-mp-course-failed .egr-progress::-webkit-progress-value {
   background: var(--egr-danger);
 }
@@ -2271,7 +2293,7 @@
 
 
 /* ============================================================
-   14c - ADMIN PAIRINGS PAGE ( manage.php)
+   14c - ADMIN PAIRINGS PAGE (VM: manage.php)
    ============================================================ */
 #egr-wrapper .egr-stats-row-4 {
   grid-template-columns: repeat(4, 1fr);

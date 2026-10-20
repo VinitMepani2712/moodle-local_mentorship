@@ -28,13 +28,21 @@ Taylor). No new role is created: the relationship is stored by the plugin and de
 ## Installation
 
 1. Install this plugin first: Site administration > Plugins > Install plugins, or copy the folder to
-   `local/mentorship` (`public/local/mentorship` on Moodle 4.1 and later).
+   `local/mentorship` (`public/local/mentorship` on Moodle 5.1 and later).
 2. Visit Site administration > Notifications to complete the installation.
+3. Optionally install the companion dashboard block, `block_mentorship`.
 
 ## Configuration
 
 - Capability `local/mentorship:manage` (given to Managers by default) allows assigning pairings.
 - Manage pairings at Site administration > Plugins > Local plugins > Mentorship pairings.
+
+## Report rules
+
+The training report counts courses enrolled in since 1 July 2021, ignores courses named as
+cancelled, and treats a normalised grade of 70% or more as passed. These match the DCF-LMS grade
+report the plugin was built from; adjust `report::COURSE_START_DATE` and `report::PASS_SCORE` in
+`classes/report.php` if your site needs different values.
 
 ## Privacy
 
@@ -47,6 +55,12 @@ fonts it uses are bundled (see `thirdpartylibs.xml`).
 JavaScript sources are in `amd/src`. Rebuild `amd/build` with Moodle's tooling before a release:
 `npx grunt amd --root=local/mentorship` from the Moodle root.
 
+## Support
+
+- Source code: https://github.com/YOUR-GITHUB-USER/moodle-local_mentorship
+- Issue tracker: https://github.com/YOUR-GITHUB-USER/moodle-local_mentorship/issues
+- Documentation: https://github.com/YOUR-GITHUB-USER/moodle-local_mentorship#readme
+
 ## License
 
-GNU GPL v3 or later. Bundled fonts: SIL Open Font License 1.1.
+GNU GPL v3 or later; see `LICENSE`. Bundled fonts: SIL Open Font License 1.1.

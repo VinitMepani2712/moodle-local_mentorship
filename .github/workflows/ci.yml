@@ -87,8 +87,9 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci mustache
 
+      # VM: Built JS differs by Moodle version; check it against the newest branch only.
       - name: Grunt
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && matrix.moodle-branch == 'MOODLE_503_STABLE' }}
         run: moodle-plugin-ci grunt --max-lint-warnings 0
 
       - name: PHPUnit tests

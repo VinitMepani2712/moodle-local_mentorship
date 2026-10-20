@@ -22,16 +22,15 @@ use core\hook\navigation\primary_extend;
  * Hook callbacks for local_mentorship.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class hook_callbacks {
-
     /**
      * Add "My mentorship" to the top menu for users who mentor someone.
      *
-     * // Mentors only. Mentees reach their report from the pairing notification and the
-     * // dashboard block; the page itself stays open to them.
+     * //VM: Mentors only. Mentees reach their report from the pairing notification and the
+     * //VM: dashboard block; the page itself stays open to them.
      *
      * @param primary_extend $hook
      */

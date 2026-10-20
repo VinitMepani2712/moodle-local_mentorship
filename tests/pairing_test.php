@@ -20,12 +20,11 @@ namespace local_mentorship;
  * Tests for the pairing API.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \local_mentorship\pairing
  */
 final class pairing_test extends \advanced_testcase {
-
     /**
      * Self, duplicate and reverse pairs are blocked; chains and several mentees per mentor are allowed.
      */

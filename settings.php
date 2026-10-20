@@ -18,13 +18,13 @@
  * Admin tree entry for local_mentorship.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-// Visible to anyone with local/mentorship:manage, not only site admins.
+// VM: Visible to anyone with local/mentorship:manage, not only site admins.
 $ADMIN->add('localplugins', new admin_externalpage(
     'local_mentorship_manage',
     get_string('managepairings', 'local_mentorship'),

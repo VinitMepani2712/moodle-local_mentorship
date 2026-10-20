@@ -25,11 +25,10 @@ use stdClass;
  * Pairing API: create, end, validate and query mentor/mentee pairings.
  *
  * @package    local_mentorship
- * @copyright  2026 Vinit Mepani
+ * @copyright  2026 Vinit Mepani, Rutgers DCF-OTPD
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class pairing {
-
     /** @var int Pairing is active. */
     const STATUS_ACTIVE = 0;
 
@@ -42,8 +41,8 @@ class pairing {
     /**
      * Check whether a new pairing is allowed.
      *
-     * // Chains (A mentors B, B mentors C) are allowed. Self, suspended or deleted users,
-     * // duplicate active and direct reverse active pairs are not.
+     * //VM: Chains (A mentors B, B mentors C) are allowed. Self, suspended or deleted users,
+     * //VM: duplicate active and direct reverse active pairs are not.
      *
      * @param int $mentorid
      * @param int $menteeid
@@ -55,8 +54,13 @@ class pairing {
         if ($mentorid === $menteeid) {
             return 'error:self';
         }
-        if ($DB->record_exists_select('user', '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',
-                ['m' => $mentorid, 'e' => $menteeid])) {
+        if (
+            $DB->record_exists_select(
+                'user',
+                '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',
+                ['m' => $mentorid, 'e' => $menteeid]
+            )
+        ) {
             return 'error:suspended';
         }
         if (self::exists_active($mentorid, $menteeid)) {
@@ -71,8 +75,8 @@ class pairing {
     /**
      * Create a pairing.
      *
-     * // Pairings are open-ended: they start now and have no end date. A mentor is
-     * // replaced with change_mentor(), which keeps the old pairing as history.
+     * //VM: Pairings are open-ended: they start now and have no end date. A mentor is
+     * //VM: replaced with change_mentor(), which keeps the old pairing as history.
      *
      * @param int $mentorid
      * @param int $menteeid
@@ -117,8 +121,8 @@ class pairing {
     /**
      * Give a mentee a new mentor: the current pairing ends (kept as history) and a new one starts.
      *
-     * // Validated before anything changes, and both steps run in one transaction, so a
-     * // mentee is never left without their mentor because the new pairing was refused.
+     * //VM: Validated before anything changes, and both steps run in one transaction, so a
+     * //VM: mentee is never left without their mentor because the new pairing was refused.
      *
      * @param int $id Active pairing to change.
      * @param int $newmentorid
@@ -191,8 +195,8 @@ class pairing {
     /**
      * Whether a user currently mentors anyone.
      *
-     * // One indexed query; used on every page by the primary navigation hook, which shows
-     * // "My mentorship" to mentors only. Pairings with a suspended or deleted user do not count.
+     * //VM: One indexed query; used on every page by the primary navigation hook, which shows
+     * //VM: "My mentorship" to mentors only. Pairings with a suspended or deleted user do not count.
      *
      * @param int $userid
      * @return bool
@@ -222,7 +226,7 @@ class pairing {
     /**
      * Whether a user may open a pairing page.
      *
-     * // Access is decided by the pairing record itself, not a role in user context.
+     * //VM: Access is decided by the pairing record itself, not a role in user context.
      *
      * @param stdClass $pairing
      * @param int $userid
@@ -235,9 +239,12 @@ class pairing {
             return true;
         }
         $member = in_array($userid, [(int) $pairing->mentorid, (int) $pairing->menteeid], true);
-        // Members lose access while either user is suspended, same as the lists hide them.
-        $suspended = $DB->record_exists_select('user', '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',
-            ['m' => $pairing->mentorid, 'e' => $pairing->menteeid]);
+        // VM: Members lose access while either user is suspended, same as the lists hide them.
+        $suspended = $DB->record_exists_select(
+            'user',
+            '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',
+            ['m' => $pairing->mentorid, 'e' => $pairing->menteeid]
+        );
         return $member && !$suspended && self::is_active($pairing);
     }
 
@@ -255,8 +262,9 @@ class pairing {
                 continue;
             }
             $pct = (int) round($pct);
+            $coursecontext = \context_course::instance($course->id);
             $progress[] = [
-                'name' => format_string($course->fullname, true, ['context' => \context_course::instance($course->id), 'escape' => false]),
+                'name' => format_string($course->fullname, true, ['context' => $coursecontext, 'escape' => false]),
                 'pct' => $pct,
                 'iscomplete' => $pct >= 100,
                 'inprogress' => $pct > 0 && $pct < 100,
