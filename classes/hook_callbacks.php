@@ -29,8 +29,8 @@ class hook_callbacks {
     /**
      * Add "My mentorship" to the top menu for users who mentor someone.
      *
-     * //VM: Mentors only. Mentees reach their report from the pairing notification and the
-     * //VM: dashboard block; the page itself stays open to them.
+     * Mentors only. Mentees reach their report from the pairing notification and the
+     * dashboard block; the page itself stays open to them.
      *
      * @param primary_extend $hook
      */

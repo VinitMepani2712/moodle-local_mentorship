@@ -21,9 +21,9 @@ use stdClass;
 /**
  * Mentee training report: courses, activities, completion, grades and pass/fail.
  *
- * //VM: Ported from local_staticpage gradereport_lib.php / gradereport.php. Same SQL, same
- * //VM: 70% pass rule, same 2021-07-01 course cutoff and CANCELLED exclusions, so numbers
- * //VM: match the existing grade report exactly.
+ * Ported from local_staticpage gradereport_lib.php / gradereport.php. Same SQL, same
+ * 70% pass rule, same 2021-07-01 course cutoff and CANCELLED exclusions, so numbers
+ * match the existing grade report exactly.
  *
  * @package    local_mentorship
  * @copyright  2026 Vinit Mepani
@@ -139,8 +139,8 @@ class report {
     /**
      * Visible activities in a course with completion status, dates and grade for a user.
      *
-     * //VM: Reads course_modules_completion first so manual completions show immediately,
-     * //VM: then the completion API, then close-date logic (same as the original report).
+     * Reads course_modules_completion first so manual completions show immediately,
+     * then the completion API, then close-date logic (same as the original report).
      *
      * @param int $courseid
      * @param int $userid

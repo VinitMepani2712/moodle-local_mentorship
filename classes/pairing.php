@@ -41,8 +41,8 @@ class pairing {
     /**
      * Check whether a new pairing is allowed.
      *
-     * //VM: Chains (A mentors B, B mentors C) are allowed. Self, suspended or deleted users,
-     * //VM: duplicate active and direct reverse active pairs are not.
+     * Chains (A mentors B, B mentors C) are allowed. Self, suspended or deleted users,
+     * duplicate active and direct reverse active pairs are not.
      *
      * @param int $mentorid
      * @param int $menteeid
@@ -75,8 +75,8 @@ class pairing {
     /**
      * Create a pairing.
      *
-     * //VM: Pairings are open-ended: they start now and have no end date. A mentor is
-     * //VM: replaced with change_mentor(), which keeps the old pairing as history.
+     * Pairings are open-ended: they start now and have no end date. A mentor is
+     * replaced with change_mentor(), which keeps the old pairing as history.
      *
      * @param int $mentorid
      * @param int $menteeid
@@ -121,8 +121,8 @@ class pairing {
     /**
      * Give a mentee a new mentor: the current pairing ends (kept as history) and a new one starts.
      *
-     * //VM: Validated before anything changes, and both steps run in one transaction, so a
-     * //VM: mentee is never left without their mentor because the new pairing was refused.
+     * Validated before anything changes, and both steps run in one transaction, so a
+     * mentee is never left without their mentor because the new pairing was refused.
      *
      * @param int $id Active pairing to change.
      * @param int $newmentorid
@@ -195,8 +195,8 @@ class pairing {
     /**
      * Whether a user currently mentors anyone.
      *
-     * //VM: One indexed query; used on every page by the primary navigation hook, which shows
-     * //VM: "My mentorship" to mentors only. Pairings with a suspended or deleted user do not count.
+     * One indexed query; used on every page by the primary navigation hook, which shows
+     * "My mentorship" to mentors only. Pairings with a suspended or deleted user do not count.
      *
      * @param int $userid
      * @return bool
@@ -226,7 +226,7 @@ class pairing {
     /**
      * Whether a user may open a pairing page.
      *
-     * //VM: Access is decided by the pairing record itself, not a role in user context.
+     * Access is decided by the pairing record itself, not a role in user context.
      *
      * @param stdClass $pairing
      * @param int $userid
@@ -239,7 +239,7 @@ class pairing {
             return true;
         }
         $member = in_array($userid, [(int) $pairing->mentorid, (int) $pairing->menteeid], true);
-        //Members lose access while either user is suspended, same as the lists hide them.
+        // Members lose access while either user is suspended, same as the lists hide them.
         $suspended = $DB->record_exists_select(
             'user',
             '(id = :m OR id = :e) AND (suspended = 1 OR deleted = 1)',

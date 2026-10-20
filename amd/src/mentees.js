@@ -16,7 +16,7 @@
 /**
  * My mentorship mentee list: filter as you type, clear, sort, keep the choice when opening a mentee.
  *
- * //VM: Progressive enhancement. Without this module the search form submits to the server.
+ * Progressive enhancement. Without this module the search form submits to the server.
  *
  * @module     local_mentorship/mentees
  * @copyright  2026 Vinit Mepani
@@ -110,6 +110,6 @@ export const init = () => {
     // Long lists scroll; bring the open mentee into view.
     const active = list.querySelector('[aria-current="true"]');
     if (active) {
-        active.scrollIntoView({ block: 'nearest' });
+        active.scrollIntoView({block: 'nearest'});
     }
 };

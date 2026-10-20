@@ -17,7 +17,7 @@
 /**
  * Pairing page: the mentee's training report, visible to the mentor, the mentee and managers.
  *
- * //VM: Report layout, filters and rules ported from local_staticpage/gradereport.php.
+ * Report layout, filters and rules ported from local_staticpage/gradereport.php.
  *
  * @package    local_mentorship
  * @copyright  2026 Vinit Mepani
@@ -32,7 +32,7 @@ use local_mentorship\report;
 $id = required_param('id', PARAM_INT);
 $export = optional_param('export', '', PARAM_ALPHA);
 
-//Filters. Values are whitelisted so nothing unexpected reaches the report or the URLs.
+// Filters. Values are whitelisted so nothing unexpected reaches the report or the URLs.
 $sortby = optional_param('sortby', 'fullname', PARAM_ALPHA);
 $f = [
     'courseid' => optional_param('courseid', 0, PARAM_INT),
@@ -52,7 +52,7 @@ require_login();
 $context = context_system::instance();
 $pairing = $DB->get_record(pairing::TABLE, ['id' => $id], '*', MUST_EXIST);
 
-//Pairing membership grants access here instead of a role in the mentee's user context.
+// Pairing membership grants access here instead of a role in the mentee's user context.
 if (!pairing::can_view($pairing, (int) $USER->id)) {
     throw new moodle_exception('nopermissions', 'error', '', get_string('viewpairing', 'local_mentorship'));
 }
@@ -70,7 +70,7 @@ $PAGE->set_heading(get_string($ismember ? 'mymentorship' : 'managepairings', 'lo
 if ($ismember) {
     $PAGE->set_primary_active_tab('local_mentorship');
 }
-//Loaded only on this page; a separate file keeps the report's font @import valid.
+// Loaded only on this page; a separate file keeps the report's font @import valid.
 $PAGE->requires->css('/local/mentorship/styles/report.css');
 $PAGE->requires->js_call_amd('local_mentorship/report', 'init');
 

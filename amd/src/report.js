@@ -16,7 +16,7 @@
 /**
  * Training report interactions: mentee selector, expand/collapse, sorting and filter toggles.
  *
- * //VM: Replaces the inline <script> from local_staticpage/gradereport.php.
+ * Replaces the inline <script> from local_staticpage/gradereport.php.
  *
  * @module     local_mentorship/report
  * @copyright  2026 Vinit Mepani

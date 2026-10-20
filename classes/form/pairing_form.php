@@ -63,7 +63,7 @@ class pairing_form extends \moodleform {
         $mform->setType('mentorid', PARAM_INT);
         $mform->addRule('mentorid', null, 'required', null, 'client');
 
-        //Several mentees can be paired with the same mentor in one go.
+        // Several mentees can be paired with the same mentor in one go.
         $mform->addElement(
             'autocomplete',
             'menteeids',

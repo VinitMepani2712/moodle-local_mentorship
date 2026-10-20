@@ -17,8 +17,8 @@
 /**
  * Capabilities for local_mentorship.
  *
- * //VM: Single capability only. No mentor role is created; the relationship lives in
- * //VM: local_mentorship_pairing so a user can be a mentor and a mentee at the same time.
+ * Single capability only. No mentor role is created; the relationship lives in
+ * local_mentorship_pairing so a user can be a mentor and a mentee at the same time.
  *
  * @package    local_mentorship
  * @copyright  2026 Vinit Mepani

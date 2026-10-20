@@ -10,7 +10,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:${{ matrix.pg }}  #Moodle 5.3 needs PostgreSQL 17.
+        image: postgres:${{ matrix.pg }}  # Moodle 5.3 needs PostgreSQL 17.
         env:
           POSTGRES_USER: 'postgres'
           POSTGRES_HOST_AUTH_METHOD: 'trust'
@@ -87,7 +87,7 @@ jobs:
         if: ${{ !cancelled() }}
         run: moodle-plugin-ci mustache
 
-      #Built JS differs by Moodle version; check it against the newest branch only.
+      # Built JS differs by Moodle version; check it against the newest branch only.
       - name: Grunt
         if: ${{ !cancelled() && matrix.moodle-branch == 'MOODLE_503_STABLE' }}
         run: moodle-plugin-ci grunt --max-lint-warnings 0
